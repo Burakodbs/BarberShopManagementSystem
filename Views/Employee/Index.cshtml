@@ -1,0 +1,27 @@
+﻿@model IEnumerable<BarberShopManagementSystem.Models.Employee>
+
+<h1>Çalışan Listesi</h1>
+
+<a href="/Employee/Create" class="btn btn-primary">Yeni Çalışan Ekle</a>
+
+<table class="table mt-3">
+    <thead>
+        <tr>
+            <th>Ad</th>
+            <th>Uzmanlık</th>
+            <th>Müsaitlik</th>
+            <th>Salon</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var employee in Model)
+        {
+            <tr>
+                <td>@employee.Name</td>
+                <td>@employee.Expertise</td>
+                <td>@(employee.IsAvailable ? "Evet" : "Hayır")</td>
+                <td>@employee.Salon?.Name</td>
+            </tr>
+        }
+    </tbody>
+</table>

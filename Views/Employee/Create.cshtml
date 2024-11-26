@@ -1,0 +1,26 @@
+﻿@model BarberShopManagementSystem.Models.Employee
+
+<h1>Yeni Çalışan Ekle</h1>
+
+<form asp-action="Create" method="post">
+    <div class="form-group">
+        <label for="Name">Ad:</label>
+        <input asp-for="Name" class="form-control" />
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label for="Expertise">Uzmanlık:</label>
+        <input asp-for="Expertise" class="form-control" />
+        <span asp-validation-for="Expertise" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label for="IsAvailable">Müsait mi?:</label>
+        <input asp-for="IsAvailable" type="checkbox" class="form-check-input" />
+    </div>
+    <div class="form-group">
+        <label for="SalonId">Salon Id:</label>
+        <input asp-for="SalonId" class="form-control" />
+        <span asp-validation-for="SalonId" class="text-danger"></span>
+    </div>
+    <button type="submit" class="btn btn-success mt-3">Kaydet</button>
+</form>
