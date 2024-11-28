@@ -10,13 +10,14 @@ namespace BarberShopManagementSystem.Models
         public string Name { get; set; }
 
         [Required]
-        public string Expertise { get; set; } // Uzmanlık alanı (Saç kesimi, sakal traşı vb.)
+        public string Specialty { get; set; } // Uzmanlık alanı (ör. Saç Kesimi, Sakal Traşı)
 
         public bool IsAvailable { get; set; } // Müsaitlik durumu
 
-        [Required]
-        public int SalonId { get; set; } // Hangi salonda çalıştığını belirtir
+        [DataType(DataType.Time)]
+        public TimeSpan StartTime { get; set; } // Çalışma başlangıç saati
 
-        public Salon Salon { get; set; } // Navigation property
+        [DataType(DataType.Time)]
+        public TimeSpan EndTime { get; set; } // Çalışma bitiş saati
     }
 }

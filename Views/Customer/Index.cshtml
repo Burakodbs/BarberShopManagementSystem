@@ -1,0 +1,27 @@
+﻿@model IEnumerable<BarberShopManagementSystem.Models.Customer>
+
+<h1>Müşteri Listesi</h1>
+
+<a href="/Customer/Create" class="btn btn-primary">Yeni Müşteri Ekle</a>
+
+<table class="table mt-3">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Ad</th>
+            <th>Email</th>
+            <th>Telefon Numarası</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var customer in Model)
+        {
+            <tr>
+                <td>@customer.Id</td>
+                <td>@customer.Name</td>
+                <td>@customer.Email</td>
+                <td>@customer.PhoneNumber</td>
+            </tr>
+        }
+    </tbody>
+</table>

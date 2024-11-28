@@ -39,5 +39,42 @@ namespace BarberShopManagementSystem.Controllers
             }
             return View(employee);
         }
-    }
+
+        // Çalışan düzenleme
+        [HttpGet]
+        public IActionResult Edit(int id)
+        {
+            var employee = _context.Employees.Find(id);
+            if (employee == null)
+            {
+                return NotFound();
+            }
+            return View(employee);
+        }
+
+        [HttpPost]
+        public IActionResult Edit(Employee employee)
+        {
+            if (ModelState.IsValid)
+            {
+                _context.Employees.Update(employee);
+                _context.SaveChanges();
+                return RedirectToAction("Index");
+            }
+            return View(employee);
+        }
+
+        // Çalışan silme
+        [HttpPost]
+        public IActionResult Delete(int id)
+        {
+            var employee = _context.Employees.Find(id);
+            if (employee != null)
+            {
+                _context.Employees.Remove(employee);
+                _context.SaveChanges();
+            }
+            return RedirectToAction("Index");
+        }
+    }//Views/Employee Klasörü ve Görünümleri: Views klasörü altına Employee adında bir klasör oluşturun ve aşağıdaki görünümleri ekleyin:
 }

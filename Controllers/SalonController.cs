@@ -18,5 +18,25 @@ namespace BarberShopManagementSystem.Controllers
             var salons = _context.Salons.ToList();
             return View(salons);
         }
+
+        // Yeni çalışan ekleme sayfası
+        [HttpGet]
+        public IActionResult Create()
+        {
+            return View();
+        }
+
+        // Yeni çalışan ekleme işlemi
+        [HttpPost]
+        public IActionResult Create(Salon salon)
+        {
+            if (ModelState.IsValid)
+            {
+                _context.Salons.Add(salon);
+                _context.SaveChanges();
+                return RedirectToAction("Index");
+            }
+            return View(salon);
+        }
     }
 }
