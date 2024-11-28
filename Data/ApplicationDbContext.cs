@@ -3,12 +3,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BarberShopManagementSystem.Data
 {
-    public class ApplicationDbContext : DbContext
+    public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : DbContext(options)
     {
-        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
-            : base(options)
-        {
-        }
 
         // Veri tabanı tabloları burada tanımlanacak.
         public DbSet<Salon> Salons { get; set; }

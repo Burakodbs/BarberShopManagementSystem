@@ -7,10 +7,11 @@
 <table class="table mt-3">
     <thead>
         <tr>
-            <th>Ad</th>
-            <th>Uzmanlık</th>
+            <th>Adı</th>
+            <th>Uzmanlık Alanı</th>
+            <th>Çalışma Saatleri</th>
             <th>Müsaitlik</th>
-            <th>Salon</th>
+            <th>İşlemler</th>
         </tr>
     </thead>
     <tbody>
@@ -18,9 +19,15 @@
         {
             <tr>
                 <td>@employee.Name</td>
-                <td>@employee.Expertise</td>
+                <td>@employee.Specialty</td>
+                <td>@employee.StartTime - @employee.EndTime</td>
                 <td>@(employee.IsAvailable ? "Evet" : "Hayır")</td>
-                <td>@employee.Salon?.Name</td>
+                <td>
+                    <a href="/Employee/Edit/@employee.Id" class="btn btn-warning">Düzenle</a>
+                    <form asp-action="Delete" asp-route-id="@employee.Id" method="post" style="display:inline;">
+                        <button type="submit" class="btn btn-danger">Sil</button>
+                    </form>
+                </td>
             </tr>
         }
     </tbody>

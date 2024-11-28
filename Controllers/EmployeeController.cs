@@ -44,6 +44,8 @@ namespace BarberShopManagementSystem.Controllers
         [HttpGet]
         public IActionResult Edit(int id)
         {
+
+            TempData["Id"] = id;
             var employee = _context.Employees.Find(id);
             if (employee == null)
             {
@@ -76,5 +78,5 @@ namespace BarberShopManagementSystem.Controllers
             }
             return RedirectToAction("Index");
         }
-    }//Views/Employee Klasörü ve Görünümleri: Views klasörü altına Employee adında bir klasör oluşturun ve aşağıdaki görünümleri ekleyin:
+    }
 }

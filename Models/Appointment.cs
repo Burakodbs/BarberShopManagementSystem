@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BarberShopManagementSystem.Models
 {
@@ -8,12 +9,7 @@ namespace BarberShopManagementSystem.Models
 
         [Required]
         public DateTime Date { get; set; } // Randevu tarihi
-
-        [Required]
-        public int EmployeeId { get; set; } // Hangi çalışanla
-
-        public Employee Employee { get; set; } // Navigation property
-
+        
         [Required]
         public string Service { get; set; } // Yapılacak işlem (ör: Saç Kesimi)
 
@@ -25,5 +21,8 @@ namespace BarberShopManagementSystem.Models
 
         public Customer Customer { get; set; } // Navigation property
 
+        public int EmployeeId { get; set; } // Çalışan ID'si
+        [ForeignKey("EmployeeId")]
+        public Employee Employee { get; set; } // Çalışan ile ilişki
     }
 }

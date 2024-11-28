@@ -1,8 +1,9 @@
 ﻿@model BarberShopManagementSystem.Models.Employee
 
-<h1>Yeni Çalışan Ekle</h1>
 
-<form asp-action="Create" method="post">
+<h1>@TempData["Id"] numaralı çalışanı düzenle</h1>
+
+<form asp-action="Edit" method="post">
     <div class="form-group">
         <label asp-for="Name"></label>
         <input asp-for="Name" class="form-control" />
