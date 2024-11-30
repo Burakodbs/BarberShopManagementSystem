@@ -1,0 +1,36 @@
+﻿@{
+    ViewData["Title"] = "Erişim Engellendi";
+    var returnUrl = ViewData["ReturnUrl"] as string;
+}
+
+<div class="container text-center mt-5">
+    <h1 class="display-4 text-danger">Erişim Engellendi</h1>
+    <p class="lead mt-3">Bu sayfaya erişim yetkiniz bulunmamaktadır.</p>
+
+    @if (!string.IsNullOrEmpty(returnUrl))
+    {
+        <p class="mt-4">Erişmeye çalıştığınız sayfa: <strong class="text-primary">@returnUrl</strong></p>
+    }
+    else
+    {
+        <p class="mt-4">Erişmeye çalıştığınız sayfa belirlenemedi.</p>
+    }
+
+    <p class="mt-4">
+        Eğer bu sayfaya erişim hakkınız olduğunu düşünüyorsanız, yöneticinizle iletişime geçin.
+    </p>
+
+    <div class="mt-5">
+        <a class="btn btn-primary btn-lg" asp-area="" asp-controller="Home" asp-action="Index">Ana Sayfaya Dön</a>
+        @if (User.Identity.IsAuthenticated)
+        {
+            <form asp-action="Logout" asp-controller="Account" method="post" class="d-inline">
+                <button type="submit" class="btn btn-outline-danger btn-lg">Çıkış Yap</button>
+            </form>
+        }
+        else
+        {
+            <a class="btn btn-outline-secondary btn-lg" asp-area="" asp-controller="Account" asp-action="Login">Giriş Yap</a>
+        }
+    </div>
+</div>

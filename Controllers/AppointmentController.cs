@@ -15,7 +15,7 @@ namespace BarberShopManagementSystem.Controllers
         }
 
         // Randevuları listele
-        [Authorize]
+        [Authorize(Roles ="Admin" )]
         public IActionResult Index()
         {
             var appointments = _context.Appointments

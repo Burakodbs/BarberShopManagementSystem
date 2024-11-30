@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace BarberShopManagementSystem.Models
+namespace BarberShopManagementSystem.ViewModels
 {
     public class LoginViewModel
     {

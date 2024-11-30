@@ -1,10 +1,12 @@
 ﻿using BarberShopManagementSystem.Data;
 using BarberShopManagementSystem.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace BarberShopManagementSystem.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class CustomerController : Controller
     {
         private readonly ApplicationDbContext _context;

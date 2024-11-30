@@ -1,9 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using BarberShopManagementSystem.Data;
 using BarberShopManagementSystem.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace BarberShopManagementSystem.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class SalonController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -19,14 +21,12 @@ namespace BarberShopManagementSystem.Controllers
             return View(salons);
         }
 
-        // Yeni çalışan ekleme sayfası
         [HttpGet]
         public IActionResult Create()
         {
             return View();
         }
 
-        // Yeni çalışan ekleme işlemi
         [HttpPost]
         public IActionResult Create(Salon salon)
         {

@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using BarberShopManagementSystem.Models;
+using BarberShopManagementSystem.ViewModels;
 
 public class AccountController : Controller
 {
@@ -62,6 +62,11 @@ public class AccountController : Controller
             ModelState.AddModelError(string.Empty, "Giriş başarısız.");
         }
         return View(model);
+    }
+    public IActionResult AccessDenied(string returnUrl)
+    {
+        ViewData["ReturnUrl"] = returnUrl;
+        return View();
     }
 
     [HttpPost]
