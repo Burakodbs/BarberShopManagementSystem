@@ -5,19 +5,33 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BarberShopManagementSystem.Data
 {
-    // Option 1: Using default IdentityUser
-    public class ApplicationDbContext : IdentityDbContext<IdentityUser>
+    public class ApplicationDbContext : DbContext
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
-            : base(options)
+            : base(options) { }
+
+        public DbSet<Salon> Salonlar { get; set; }
+        public DbSet<Hizmet> Hizmetler { get; set; }
+        public DbSet<Personel> Personeller { get; set; }
+        public DbSet<Randevu> Randevular { get; set; }
+        public DbSet<Musteri> Musteriler { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<Randevu>()
+                .HasOne(r => r.Personel)
+                .WithMany(p => p.Randevular)
+                .HasForeignKey(r => r.PersonelId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Personel>()
+                .HasOne(p => p.Salon)
+                .WithMany(s => s.Personeller)
+                .HasForeignKey(p => p.SalonId)
+                .OnDelete(DeleteBehavior.Restrict);
         }
-
-        public DbSet<Salon> Salons { get; set; }
-        public DbSet<Employee> Employees { get; set; }
-        public DbSet<Appointment> Appointments { get; set; }
-        public DbSet<Customer> Customers { get; set; }
-
     }
 
 }
