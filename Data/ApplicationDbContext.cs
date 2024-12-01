@@ -5,20 +5,18 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BarberShopManagementSystem.Data
 {
-    // Option 1: Using default IdentityUser
-    public class ApplicationDbContext : IdentityDbContext<IdentityUser>
+    public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : IdentityDbContext<IdentityUser>(options)
     {
-        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
-            : base(options)
-        {
-        }
+        public required DbSet<Salon> Salonlar { get; set; }
+        public required DbSet<Customer> Customers { get; set; }
 
-        public DbSet<Salon> Salons { get; set; }
-        public DbSet<Employee> Employees { get; set; }
-        public DbSet<Appointment> Appointments { get; set; }
-        public DbSet<Customer> Customers { get; set; }
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            base.OnModelCreating(builder);
+            // İlişkisel model yapılandırması eklenebilir
+        }
 
     }
 
 }
- 
+

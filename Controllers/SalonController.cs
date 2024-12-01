@@ -17,7 +17,7 @@ namespace BarberShopManagementSystem.Controllers
 
         public IActionResult Index()
         {
-            var salons = _context.Salons.ToList();
+            var salons = _context.Salonlar.ToList();
             return View(salons);
         }
 
@@ -32,7 +32,7 @@ namespace BarberShopManagementSystem.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Salons.Add(salon);
+                _context.Salonlar.Add(salon);
                 _context.SaveChanges();
                 return RedirectToAction("Index");
             }
