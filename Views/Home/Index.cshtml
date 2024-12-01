@@ -1,9 +1,8 @@
 ﻿@{
     ViewData["Title"] = "Ana Sayfa";
 }
-
 <div class="container mt-5">
-    <h1 class="text-center mb-4 text-primary">BarberShop Yönetim Sistemine Hoş Geldiniz</h1>
+    <h1 class="text-center mb-4 text-primary">Hoş Geldiniz</h1>
     @if (User.Identity.IsAuthenticated)
     {
         <p class="text-center lead">Merhaba, <strong>@User.Identity.Name</strong>! Aşağıdaki bağlantılardan işlemlerinize devam edebilirsiniz.</p>
@@ -17,74 +16,45 @@
             <a asp-action="Register" asp-controller="Account">Kayıt Olun</a>.
         </p>
     }
-
-    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4 mt-4">
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4 mt-4 justify-content-center">
         @if (User.Identity.IsAuthenticated)
         {
-            <!-- Randevular -->
-            <div class="col">
-                <div class="card shadow-sm h-100">
-                    <div class="card-body text-center">
-                        <i class="bi bi-calendar-check-fill display-4 text-primary"></i>
-                        <h5 class="card-title mt-3">Randevular</h5>
-                        <p class="card-text text-muted">Randevularınızı yönetin ve yeni randevu oluşturun.</p>
-                        <a href="/Appointment" class="btn btn-primary btn-sm">Randevular</a>
-                        <a href="/Appointment/Create" class="btn btn-outline-primary btn-sm">Randevu Al</a>
+            @if (User.IsInRole("Admin"))
+            {
+                <div class="col">
+                    <div class="card shadow-sm h-100">
+                        <div class="card-body text-center">
+                            <i class="bi bi-gear-fill display-4 text-danger"></i>
+                            <h5 class="card-title mt-3">Admin Paneli</h5>
+                            <p class="card-text text-muted">Kullanıcı yönetimi ve diğer admin işlemleri.</p>
+                            <a href="/Admin/DashBoard" class="btn btn-danger btn-sm">Admin Paneli</a>
+                        </div>
                     </div>
                 </div>
-            </div>
-
-            <!-- Müşteriler -->
-            <div class="col">
-                <div class="card shadow-sm h-100">
-                    <div class="card-body text-center">
-                        <i class="bi bi-people-fill display-4 text-success"></i>
-                        <h5 class="card-title mt-3">Müşteriler</h5>
-                        <p class="card-text text-muted">Müşteri kayıtlarını görüntüleyin veya yeni müşteri ekleyin.</p>
-                        <a href="/Customer" class="btn btn-success btn-sm">Müşteriler</a>
-                        <a href="/Customer/Create" class="btn btn-outline-success btn-sm">Müşteri Ekle</a>
+            }
+            else
+            {
+                <!-- Randevular -->
+                <div class="col">
+                    <div class="card shadow-sm h-100">
+                        <div class="card-body text-center">
+                            <i class="bi bi-calendar-check-fill display-4 text-primary"></i>
+                            <h5 class="card-title mt-3">Randevular</h5>
+                            <p class="card-text text-muted">Randevularınıza göz atın ya da yeni randevu oluşturun.</p>
+                            <a href="/Appointment" class="btn btn-primary btn-sm">Randevularım</a>
+                            <a href="/Appointment/Create" class="btn btn-outline-primary btn-sm">Randevu Al</a>
+                        </div>
                     </div>
                 </div>
-            </div>
-
-            <!-- Çalışanlar -->
-            <div class="col">
-                <div class="card shadow-sm h-100">
-                    <div class="card-body text-center">
-                        <i class="bi bi-person-badge-fill display-4 text-warning"></i>
-                        <h5 class="card-title mt-3">Çalışanlar</h5>
-                        <p class="card-text text-muted">Çalışanları yönetebilir ve bilgilerini güncelleyebilirsiniz.</p>
-                        <a href="/Employee" class="btn btn-warning btn-sm">Çalışanlar</a>
-                        <a href="/Employee/Create" class="btn btn-outline-warning btn-sm">Çalışan Ekle</a>
-                    </div>
-                </div>
-            </div>
+            }
         }
         else
         {
-            <div class="container text-center">
-                <div class="col">
-                    <div class="alert alert-info">
-                        Lütfen oturum açarak işlemlerinize devam edin.
-                    </div>
+            <div class="col-12">
+                <div class="alert alert-info text-center">
+                    Lütfen oturum açarak işlemlerinize devam edin.
                 </div>
             </div>
         }
     </div>
-
-    @if (User.IsInRole("Admin"))
-    {
-        <div class="row mt-4">
-            <div class="col-md-4">
-                <div class="card shadow-sm h-100">
-                    <div class="card-body text-center">
-                        <i class="bi bi-gear-fill display-4 text-danger"></i>
-                        <h5 class="card-title mt-3">Admin Paneli</h5>
-                        <p class="card-text text-muted">Kullanıcı yönetimi ve diğer admin işlemleri.</p>
-                        <a href="/Admin/DashBoard" class="btn btn-danger btn-sm">Admin Paneli</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    }
 </div>

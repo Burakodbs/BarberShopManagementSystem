@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace BarberShopManagementSystem.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class CustomerTableCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -30,9 +30,6 @@ namespace BarberShopManagementSystem.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Discriminator = table.Column<string>(type: "nvarchar(21)", maxLength: 21, nullable: false),
-                    Ad = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Soyad = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -54,19 +51,20 @@ namespace BarberShopManagementSystem.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Musteriler",
+                name: "Customers",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Ad = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Soyad = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    FirstName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    LastName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Telefon = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    IdentityUserId = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Musteriler", x => x.Id);
+                    table.PrimaryKey("PK_Customers", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -191,89 +189,6 @@ namespace BarberShopManagementSystem.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
-            migrationBuilder.CreateTable(
-                name: "Personeller",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Ad = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Soyad = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    SalonId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Personeller", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Personeller_Salonlar_SalonId",
-                        column: x => x.SalonId,
-                        principalTable: "Salonlar",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Hizmetler",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Ad = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Ucret = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    Sure = table.Column<int>(type: "int", nullable: false),
-                    PersonelId = table.Column<int>(type: "int", nullable: true),
-                    SalonId = table.Column<int>(type: "int", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Hizmetler", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Hizmetler_Personeller_PersonelId",
-                        column: x => x.PersonelId,
-                        principalTable: "Personeller",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_Hizmetler_Salonlar_SalonId",
-                        column: x => x.SalonId,
-                        principalTable: "Salonlar",
-                        principalColumn: "Id");
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Randevular",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    RandevuTarihi = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    PersonelId = table.Column<int>(type: "int", nullable: false),
-                    MusteriId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    HizmetId = table.Column<int>(type: "int", nullable: false),
-                    Durum = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Randevular", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Randevular_AspNetUsers_MusteriId",
-                        column: x => x.MusteriId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Randevular_Hizmetler_HizmetId",
-                        column: x => x.HizmetId,
-                        principalTable: "Hizmetler",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Randevular_Personeller_PersonelId",
-                        column: x => x.PersonelId,
-                        principalTable: "Personeller",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",
@@ -312,36 +227,6 @@ namespace BarberShopManagementSystem.Migrations
                 column: "NormalizedUserName",
                 unique: true,
                 filter: "[NormalizedUserName] IS NOT NULL");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Hizmetler_PersonelId",
-                table: "Hizmetler",
-                column: "PersonelId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Hizmetler_SalonId",
-                table: "Hizmetler",
-                column: "SalonId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Personeller_SalonId",
-                table: "Personeller",
-                column: "SalonId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Randevular_HizmetId",
-                table: "Randevular",
-                column: "HizmetId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Randevular_MusteriId",
-                table: "Randevular",
-                column: "MusteriId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Randevular_PersonelId",
-                table: "Randevular",
-                column: "PersonelId");
         }
 
         /// <inheritdoc />
@@ -363,25 +248,16 @@ namespace BarberShopManagementSystem.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "Musteriler");
+                name: "Customers");
 
             migrationBuilder.DropTable(
-                name: "Randevular");
+                name: "Salonlar");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
-
-            migrationBuilder.DropTable(
-                name: "Hizmetler");
-
-            migrationBuilder.DropTable(
-                name: "Personeller");
-
-            migrationBuilder.DropTable(
-                name: "Salonlar");
         }
     }
 }

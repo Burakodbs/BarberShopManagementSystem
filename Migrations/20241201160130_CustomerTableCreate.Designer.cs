@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BarberShopManagementSystem.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241130095838_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20241201160130_CustomerTableCreate")]
+    partial class CustomerTableCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,127 +25,39 @@ namespace BarberShopManagementSystem.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("BarberShopManagementSystem.Models.Hizmet", b =>
+            modelBuilder.Entity("BarberShopManagementSystem.Models.Customer", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Ad")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("PersonelId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("SalonId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Sure")
-                        .HasColumnType("int");
-
-                    b.Property<decimal>("Ucret")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("PersonelId");
-
-                    b.HasIndex("SalonId");
-
-                    b.ToTable("Hizmetler");
-                });
-
-            modelBuilder.Entity("BarberShopManagementSystem.Models.Musteri", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Ad")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Soyad")
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("IdentityUserId")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Telefon")
+                    b.Property<string>("LastName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
-                    b.HasKey("Id");
-
-                    b.ToTable("Musteriler");
-                });
-
-            modelBuilder.Entity("BarberShopManagementSystem.Models.Personel", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Ad")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("SalonId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Soyad")
+                    b.Property<string>("PhoneNumber")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("SalonId");
-
-                    b.ToTable("Personeller");
-                });
-
-            modelBuilder.Entity("BarberShopManagementSystem.Models.Randevu", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("Durum")
-                        .HasColumnType("int");
-
-                    b.Property<int>("HizmetId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("MusteriId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<int>("PersonelId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("RandevuTarihi")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("HizmetId");
-
-                    b.HasIndex("MusteriId");
-
-                    b.HasIndex("PersonelId");
-
-                    b.ToTable("Randevular");
+                    b.ToTable("Customers");
                 });
 
             modelBuilder.Entity("BarberShopManagementSystem.Models.Salon", b =>
@@ -239,11 +151,6 @@ namespace BarberShopManagementSystem.Migrations
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Discriminator")
-                        .IsRequired()
-                        .HasMaxLength(21)
-                        .HasColumnType("nvarchar(21)");
-
                     b.Property<string>("Email")
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
@@ -295,10 +202,6 @@ namespace BarberShopManagementSystem.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers", (string)null);
-
-                    b.HasDiscriminator().HasValue("IdentityUser");
-
-                    b.UseTphMappingStrategy();
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
@@ -382,70 +285,6 @@ namespace BarberShopManagementSystem.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("BarberShopManagementSystem.Models.ApplicationUser", b =>
-                {
-                    b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityUser");
-
-                    b.Property<string>("Ad")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Soyad")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasDiscriminator().HasValue("ApplicationUser");
-                });
-
-            modelBuilder.Entity("BarberShopManagementSystem.Models.Hizmet", b =>
-                {
-                    b.HasOne("BarberShopManagementSystem.Models.Personel", null)
-                        .WithMany("UzmanlikAlanlari")
-                        .HasForeignKey("PersonelId");
-
-                    b.HasOne("BarberShopManagementSystem.Models.Salon", null)
-                        .WithMany("SunulanHizmetler")
-                        .HasForeignKey("SalonId");
-                });
-
-            modelBuilder.Entity("BarberShopManagementSystem.Models.Personel", b =>
-                {
-                    b.HasOne("BarberShopManagementSystem.Models.Salon", "Salon")
-                        .WithMany("Personeller")
-                        .HasForeignKey("SalonId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Salon");
-                });
-
-            modelBuilder.Entity("BarberShopManagementSystem.Models.Randevu", b =>
-                {
-                    b.HasOne("BarberShopManagementSystem.Models.Hizmet", "Hizmet")
-                        .WithMany()
-                        .HasForeignKey("HizmetId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("BarberShopManagementSystem.Models.ApplicationUser", "Musteri")
-                        .WithMany()
-                        .HasForeignKey("MusteriId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("BarberShopManagementSystem.Models.Personel", "Personel")
-                        .WithMany("Randevular")
-                        .HasForeignKey("PersonelId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Hizmet");
-
-                    b.Navigation("Musteri");
-
-                    b.Navigation("Personel");
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -495,20 +334,6 @@ namespace BarberShopManagementSystem.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("BarberShopManagementSystem.Models.Personel", b =>
-                {
-                    b.Navigation("Randevular");
-
-                    b.Navigation("UzmanlikAlanlari");
-                });
-
-            modelBuilder.Entity("BarberShopManagementSystem.Models.Salon", b =>
-                {
-                    b.Navigation("Personeller");
-
-                    b.Navigation("SunulanHizmetler");
                 });
 #pragma warning restore 612, 618
         }

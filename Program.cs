@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using BarberShopManagementSystem.Data;
 using Microsoft.AspNetCore.Identity;
+using BarberShopManagementSystem.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -63,9 +64,10 @@ using (var scope = app.Services.CreateScope())
         {
             adminUser = new IdentityUser
             {
+                
                 UserName = adminEmail,
                 Email = adminEmail,
-                EmailConfirmed = true // Optional: confirm email by default
+                EmailConfirmed = true
             };
 
             var createResult = await userManager.CreateAsync(adminUser, adminPassword);

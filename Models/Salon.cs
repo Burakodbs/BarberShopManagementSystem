@@ -7,7 +7,6 @@
         public string Adres { get; set; }
         public TimeSpan AcilisSaati { get; set; }
         public TimeSpan KapanisSaati { get; set; }
-        public List<Personel> Personeller { get; set; }
-        public List<Hizmet> SunulanHizmetler { get; set; }
+
     }
 }
