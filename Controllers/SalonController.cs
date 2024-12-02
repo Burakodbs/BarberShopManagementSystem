@@ -15,28 +15,6 @@ namespace BarberShopManagementSystem.Controllers
             _context = context;
         }
 
-        public IActionResult Index()
-        {
-            var salons = _context.Salonlar.ToList();
-            return View(salons);
-        }
-
-        [HttpGet]
-        public IActionResult Create()
-        {
-            return View();
-        }
-
-        [HttpPost]
-        public IActionResult Create(Salon salon)
-        {
-            if (ModelState.IsValid)
-            {
-                _context.Salonlar.Add(salon);
-                _context.SaveChanges();
-                return RedirectToAction("Index");
-            }
-            return View(salon);
-        }
+       
     }
 }
