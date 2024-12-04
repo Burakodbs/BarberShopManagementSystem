@@ -10,22 +10,23 @@ using BarberShopManagementSystem.Models;
 
 namespace BarberShopManagementSystem.Controllers
 {
-    public class SalonController : Controller
+    public class ServiceController : Controller
     {
         private readonly ApplicationDbContext _context;
 
-        public SalonController(ApplicationDbContext context)
+        public ServiceController(ApplicationDbContext context)
         {
             _context = context;
         }
 
-        // GET: Salon
+        // GET: Service
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Salon.ToListAsync());
+            var applicationDbContext = _context.Service.Include(s => s.Salon);
+            return View(await applicationDbContext.ToListAsync());
         }
 
-        // GET: Salon/Details/5
+        // GET: Service/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -33,39 +34,42 @@ namespace BarberShopManagementSystem.Controllers
                 return NotFound();
             }
 
-            var salon = await _context.Salon
+            var service = await _context.Service
+                .Include(s => s.Salon)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (salon == null)
+            if (service == null)
             {
                 return NotFound();
             }
 
-            return View(salon);
+            return View(service);
         }
 
-        // GET: Salon/Create
+        // GET: Service/Create
         public IActionResult Create()
         {
+            ViewData["SalonId"] = new SelectList(_context.Set<Salon>(), "Id", "Id");
             return View();
         }
 
-        // POST: Salon/Create
+        // POST: Service/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Address,PhoneNumber")] Salon salon)
+        public async Task<IActionResult> Create([Bind("Id,Name,Price,SalonId")] Service service)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(salon);
+                _context.Add(service);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(salon);
+            ViewData["SalonId"] = new SelectList(_context.Set<Salon>(), "Id", "Id", service.SalonId);
+            return View(service);
         }
 
-        // GET: Salon/Edit/5
+        // GET: Service/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -73,22 +77,23 @@ namespace BarberShopManagementSystem.Controllers
                 return NotFound();
             }
 
-            var salon = await _context.Salon.FindAsync(id);
-            if (salon == null)
+            var service = await _context.Service.FindAsync(id);
+            if (service == null)
             {
                 return NotFound();
             }
-            return View(salon);
+            ViewData["SalonId"] = new SelectList(_context.Set<Salon>(), "Id", "Id", service.SalonId);
+            return View(service);
         }
 
-        // POST: Salon/Edit/5
+        // POST: Service/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Address,PhoneNumber")] Salon salon)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Price,SalonId")] Service service)
         {
-            if (id != salon.Id)
+            if (id != service.Id)
             {
                 return NotFound();
             }
@@ -97,12 +102,12 @@ namespace BarberShopManagementSystem.Controllers
             {
                 try
                 {
-                    _context.Update(salon);
+                    _context.Update(service);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!SalonExists(salon.Id))
+                    if (!ServiceExists(service.Id))
                     {
                         return NotFound();
                     }
@@ -113,10 +118,11 @@ namespace BarberShopManagementSystem.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(salon);
+            ViewData["SalonId"] = new SelectList(_context.Set<Salon>(), "Id", "Id", service.SalonId);
+            return View(service);
         }
 
-        // GET: Salon/Delete/5
+        // GET: Service/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -124,34 +130,35 @@ namespace BarberShopManagementSystem.Controllers
                 return NotFound();
             }
 
-            var salon = await _context.Salon
+            var service = await _context.Service
+                .Include(s => s.Salon)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (salon == null)
+            if (service == null)
             {
                 return NotFound();
             }
 
-            return View(salon);
+            return View(service);
         }
 
-        // POST: Salon/Delete/5
+        // POST: Service/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var salon = await _context.Salon.FindAsync(id);
-            if (salon != null)
+            var service = await _context.Service.FindAsync(id);
+            if (service != null)
             {
-                _context.Salon.Remove(salon);
+                _context.Service.Remove(service);
             }
 
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool SalonExists(int id)
+        private bool ServiceExists(int id)
         {
-            return _context.Salon.Any(e => e.Id == id);
+            return _context.Service.Any(e => e.Id == id);
         }
     }
 }

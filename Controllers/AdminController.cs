@@ -20,7 +20,7 @@ namespace BarberShopManagementSystem.Controllers
             return View();
         }
 
-        public async Task<IActionResult> ManageUsers()
+        public IActionResult ManageUsers()
         {
             var users = _userManager.Users.ToList();
             return View(users);

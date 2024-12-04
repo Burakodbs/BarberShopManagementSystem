@@ -11,9 +11,11 @@ namespace BarberShopManagementSystem.Data
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
+
             base.OnModelCreating(builder);
-            // İlişkisel model yapılandırması eklenebilir
         }
+        public DbSet<BarberShopManagementSystem.Models.Service> Service { get; set; } = default!;
+        public DbSet<BarberShopManagementSystem.Models.Salon> Salon { get; set; } = default!;
 
     }
 
