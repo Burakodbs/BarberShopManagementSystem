@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BarberShopManagementSystem.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241204130830_UpdateConstraints")]
-    partial class UpdateConstraints
+    [Migration("20241207104303_InitialCreate2")]
+    partial class InitialCreate2
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,6 +24,49 @@ namespace BarberShopManagementSystem.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("BarberShopManagementSystem.Models.Appointment", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CustomerId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("EmployeeId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("EndTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsApproved")
+                        .HasColumnType("bit");
+
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("SalonId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ServiceId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("StartTime")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EmployeeId");
+
+                    b.HasIndex("SalonId");
+
+                    b.HasIndex("ServiceId");
+
+                    b.ToTable("Appointment");
+                });
 
             modelBuilder.Entity("BarberShopManagementSystem.Models.Customer", b =>
                 {
@@ -60,6 +103,75 @@ namespace BarberShopManagementSystem.Migrations
                     b.ToTable("Customers");
                 });
 
+            modelBuilder.Entity("BarberShopManagementSystem.Models.Employee", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<TimeSpan>("AvailableFrom")
+                        .HasColumnType("time");
+
+                    b.Property<TimeSpan>("AvailableTo")
+                        .HasColumnType("time");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("SalonId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SalonId");
+
+                    b.ToTable("Employees");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            AvailableFrom = new TimeSpan(0, 8, 0, 0, 0),
+                            AvailableTo = new TimeSpan(0, 16, 0, 0, 0),
+                            Name = "Ahmet Yılmaz",
+                            SalonId = 1
+                        },
+                        new
+                        {
+                            Id = 2,
+                            AvailableFrom = new TimeSpan(0, 12, 0, 0, 0),
+                            AvailableTo = new TimeSpan(0, 20, 0, 0, 0),
+                            Name = "Mehmet Kaya",
+                            SalonId = 1
+                        });
+                });
+
+            modelBuilder.Entity("BarberShopManagementSystem.Models.EmployeeSpecialty", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("EmployeeId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ServiceId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EmployeeId");
+
+                    b.HasIndex("ServiceId");
+
+                    b.ToTable("EmployeeSpecialties");
+                });
+
             modelBuilder.Entity("BarberShopManagementSystem.Models.Salon", b =>
                 {
                     b.Property<int>("Id")
@@ -68,21 +180,33 @@ namespace BarberShopManagementSystem.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Address")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<TimeSpan>("EndHour")
+                        .HasColumnType("time");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("PhoneNumber")
+                    b.Property<TimeSpan>("StartHour")
+                        .HasColumnType("time");
+
+                    b.Property<string>("WorkingDays")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Salon");
+                    b.ToTable("Salons");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            EndHour = new TimeSpan(0, 18, 0, 0, 0),
+                            Name = "Elite Barber",
+                            StartHour = new TimeSpan(0, 8, 0, 0, 0),
+                            WorkingDays = "Monday-Saturday"
+                        });
                 });
 
             modelBuilder.Entity("BarberShopManagementSystem.Models.Service", b =>
@@ -93,9 +217,8 @@ namespace BarberShopManagementSystem.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("Duration")
+                        .HasColumnType("int");
 
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
@@ -103,11 +226,49 @@ namespace BarberShopManagementSystem.Migrations
                     b.Property<int>("SalonId")
                         .HasColumnType("int");
 
+                    b.Property<string>("ServiceName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("SalonId");
 
-                    b.ToTable("Service");
+                    b.ToTable("SalonServices");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Duration = 60,
+                            Price = 250m,
+                            SalonId = 1,
+                            ServiceName = "Saç Tıraşı"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Duration = 30,
+                            Price = 50m,
+                            SalonId = 1,
+                            ServiceName = "Sakal Tıraşı"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Duration = 90,
+                            Price = 300m,
+                            SalonId = 1,
+                            ServiceName = "Saç Sakal Tıraşı"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Duration = 60,
+                            Price = 500m,
+                            SalonId = 1,
+                            ServiceName = "Damat Tıraşı"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -308,6 +469,63 @@ namespace BarberShopManagementSystem.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("BarberShopManagementSystem.Models.Appointment", b =>
+                {
+                    b.HasOne("BarberShopManagementSystem.Models.Employee", "Employee")
+                        .WithMany()
+                        .HasForeignKey("EmployeeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("BarberShopManagementSystem.Models.Salon", "Salon")
+                        .WithMany()
+                        .HasForeignKey("SalonId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("BarberShopManagementSystem.Models.Service", "Service")
+                        .WithMany()
+                        .HasForeignKey("ServiceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Employee");
+
+                    b.Navigation("Salon");
+
+                    b.Navigation("Service");
+                });
+
+            modelBuilder.Entity("BarberShopManagementSystem.Models.Employee", b =>
+                {
+                    b.HasOne("BarberShopManagementSystem.Models.Salon", "Salon")
+                        .WithMany("Employees")
+                        .HasForeignKey("SalonId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Salon");
+                });
+
+            modelBuilder.Entity("BarberShopManagementSystem.Models.EmployeeSpecialty", b =>
+                {
+                    b.HasOne("BarberShopManagementSystem.Models.Employee", "Employee")
+                        .WithMany("Specialties")
+                        .HasForeignKey("EmployeeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("BarberShopManagementSystem.Models.Service", "Service")
+                        .WithMany()
+                        .HasForeignKey("ServiceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Employee");
+
+                    b.Navigation("Service");
+                });
+
             modelBuilder.Entity("BarberShopManagementSystem.Models.Service", b =>
                 {
                     b.HasOne("BarberShopManagementSystem.Models.Salon", "Salon")
@@ -370,8 +588,15 @@ namespace BarberShopManagementSystem.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("BarberShopManagementSystem.Models.Employee", b =>
+                {
+                    b.Navigation("Specialties");
+                });
+
             modelBuilder.Entity("BarberShopManagementSystem.Models.Salon", b =>
                 {
+                    b.Navigation("Employees");
+
                     b.Navigation("Services");
                 });
 #pragma warning restore 612, 618
