@@ -3,8 +3,6 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
-
 namespace BarberShopManagementSystem.Migrations
 {
     /// <inheritdoc />
@@ -58,8 +56,8 @@ namespace BarberShopManagementSystem.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    FirstName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    LastName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    FirstName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    LastName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     IdentityUserId = table.Column<string>(type: "nvarchar(max)", nullable: false)
@@ -67,22 +65,6 @@ namespace BarberShopManagementSystem.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Customers", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Salons",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    WorkingDays = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    StartHour = table.Column<TimeSpan>(type: "time", nullable: false),
-                    EndHour = table.Column<TimeSpan>(type: "time", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Salons", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -103,7 +85,7 @@ namespace BarberShopManagementSystem.Migrations
                         column: x => x.RoleId,
                         principalTable: "AspNetRoles",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -124,7 +106,7 @@ namespace BarberShopManagementSystem.Migrations
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -144,7 +126,7 @@ namespace BarberShopManagementSystem.Migrations
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -162,13 +144,13 @@ namespace BarberShopManagementSystem.Migrations
                         column: x => x.RoleId,
                         principalTable: "AspNetRoles",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_AspNetUserRoles_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -188,156 +170,8 @@ namespace BarberShopManagementSystem.Migrations
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                 });
-
-            migrationBuilder.CreateTable(
-                name: "Employees",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    SalonId = table.Column<int>(type: "int", nullable: false),
-                    AvailableFrom = table.Column<TimeSpan>(type: "time", nullable: false),
-                    AvailableTo = table.Column<TimeSpan>(type: "time", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Employees", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Employees_Salons_SalonId",
-                        column: x => x.SalonId,
-                        principalTable: "Salons",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "SalonServices",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    SalonId = table.Column<int>(type: "int", nullable: false),
-                    ServiceName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Duration = table.Column<int>(type: "int", nullable: false),
-                    Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_SalonServices", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_SalonServices_Salons_SalonId",
-                        column: x => x.SalonId,
-                        principalTable: "Salons",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Appointment",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    SalonId = table.Column<int>(type: "int", nullable: false),
-                    EmployeeId = table.Column<int>(type: "int", nullable: false),
-                    ServiceId = table.Column<int>(type: "int", nullable: false),
-                    CustomerId = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    StartTime = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    EndTime = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    IsApproved = table.Column<bool>(type: "bit", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Appointment", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Appointment_Employees_EmployeeId",
-                        column: x => x.EmployeeId,
-                        principalTable: "Employees",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
-                    table.ForeignKey(
-                        name: "FK_Appointment_SalonServices_ServiceId",
-                        column: x => x.ServiceId,
-                        principalTable: "SalonServices",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
-                    table.ForeignKey(
-                        name: "FK_Appointment_Salons_SalonId",
-                        column: x => x.SalonId,
-                        principalTable: "Salons",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "EmployeeSpecialties",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    EmployeeId = table.Column<int>(type: "int", nullable: false),
-                    ServiceId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_EmployeeSpecialties", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_EmployeeSpecialties_Employees_EmployeeId",
-                        column: x => x.EmployeeId,
-                        principalTable: "Employees",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
-                    table.ForeignKey(
-                        name: "FK_EmployeeSpecialties_SalonServices_ServiceId",
-                        column: x => x.ServiceId,
-                        principalTable: "SalonServices",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
-                });
-
-            migrationBuilder.InsertData(
-                table: "Salons",
-                columns: new[] { "Id", "EndHour", "Name", "StartHour", "WorkingDays" },
-                values: new object[] { 1, new TimeSpan(0, 18, 0, 0, 0), "Elite Barber", new TimeSpan(0, 8, 0, 0, 0), "Monday-Saturday" });
-
-            migrationBuilder.InsertData(
-                table: "Employees",
-                columns: new[] { "Id", "AvailableFrom", "AvailableTo", "Name", "SalonId" },
-                values: new object[,]
-                {
-                    { 1, new TimeSpan(0, 8, 0, 0, 0), new TimeSpan(0, 16, 0, 0, 0), "Ahmet Yılmaz", 1 },
-                    { 2, new TimeSpan(0, 12, 0, 0, 0), new TimeSpan(0, 20, 0, 0, 0), "Mehmet Kaya", 1 }
-                });
-
-            migrationBuilder.InsertData(
-                table: "SalonServices",
-                columns: new[] { "Id", "Duration", "Price", "SalonId", "ServiceName" },
-                values: new object[,]
-                {
-                    { 1, 60, 250m, 1, "Saç Tıraşı" },
-                    { 2, 30, 50m, 1, "Sakal Tıraşı" },
-                    { 3, 90, 300m, 1, "Saç Sakal Tıraşı" },
-                    { 4, 60, 500m, 1, "Damat Tıraşı" }
-                });
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Appointment_EmployeeId",
-                table: "Appointment",
-                column: "EmployeeId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Appointment_SalonId",
-                table: "Appointment",
-                column: "SalonId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Appointment_ServiceId",
-                table: "Appointment",
-                column: "ServiceId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
@@ -377,34 +211,11 @@ namespace BarberShopManagementSystem.Migrations
                 column: "NormalizedUserName",
                 unique: true,
                 filter: "[NormalizedUserName] IS NOT NULL");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Employees_SalonId",
-                table: "Employees",
-                column: "SalonId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_EmployeeSpecialties_EmployeeId",
-                table: "EmployeeSpecialties",
-                column: "EmployeeId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_EmployeeSpecialties_ServiceId",
-                table: "EmployeeSpecialties",
-                column: "ServiceId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_SalonServices_SalonId",
-                table: "SalonServices",
-                column: "SalonId");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropTable(
-                name: "Appointment");
-
             migrationBuilder.DropTable(
                 name: "AspNetRoleClaims");
 
@@ -424,22 +235,10 @@ namespace BarberShopManagementSystem.Migrations
                 name: "Customers");
 
             migrationBuilder.DropTable(
-                name: "EmployeeSpecialties");
-
-            migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
-
-            migrationBuilder.DropTable(
-                name: "Employees");
-
-            migrationBuilder.DropTable(
-                name: "SalonServices");
-
-            migrationBuilder.DropTable(
-                name: "Salons");
         }
     }
 }

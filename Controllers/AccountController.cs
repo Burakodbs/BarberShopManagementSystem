@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using BarberShopManagementSystem.ViewModels;
-using BarberShopManagementSystem.Models;
 using Microsoft.EntityFrameworkCore;
 using BarberShopManagementSystem.Data;
+using BarberShopManagementSystem.Models;
 
 public class AccountController : Controller
 {
