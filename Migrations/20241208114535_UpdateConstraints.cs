@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace BarberShopManagementSystem.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class UpdateConstraints : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -236,6 +236,44 @@ namespace BarberShopManagementSystem.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Appointment",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    SalonId = table.Column<int>(type: "int", nullable: false),
+                    EmployeeId = table.Column<int>(type: "int", nullable: false),
+                    ServiceId = table.Column<int>(type: "int", nullable: false),
+                    CustomerId = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    StartTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    EndTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    IsApproved = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Appointment", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Appointment_Employees_EmployeeId",
+                        column: x => x.EmployeeId,
+                        principalTable: "Employees",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.NoAction);
+                    table.ForeignKey(
+                        name: "FK_Appointment_SalonServices_ServiceId",
+                        column: x => x.ServiceId,
+                        principalTable: "SalonServices",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.NoAction);
+                    table.ForeignKey(
+                        name: "FK_Appointment_Salons_SalonId",
+                        column: x => x.SalonId,
+                        principalTable: "Salons",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.NoAction);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "EmployeeSpecialties",
                 columns: table => new
                 {
@@ -285,6 +323,21 @@ namespace BarberShopManagementSystem.Migrations
                     { 3, 90, 300m, 1, "Saç Sakal Tıraşı" },
                     { 4, 60, 500m, 1, "Damat Tıraşı" }
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Appointment_EmployeeId",
+                table: "Appointment",
+                column: "EmployeeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Appointment_SalonId",
+                table: "Appointment",
+                column: "SalonId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Appointment_ServiceId",
+                table: "Appointment",
+                column: "ServiceId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
@@ -349,6 +402,9 @@ namespace BarberShopManagementSystem.Migrations
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "Appointment");
+
             migrationBuilder.DropTable(
                 name: "AspNetRoleClaims");
 

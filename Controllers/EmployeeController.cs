@@ -10,18 +10,19 @@ using BarberShopManagementSystem.Models;
 
 namespace BarberShopManagementSystem.Controllers
 {
-    public class SalonController : Controller
+    public class EmployeeController : Controller
     {
         private readonly ApplicationDbContext _context;
 
-        public SalonController(ApplicationDbContext context)
+        public EmployeeController(ApplicationDbContext context)
         {
             _context = context;
         }
 
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Salons.ToListAsync());
+            var applicationDbContext = _context.Employees.Include(e => e.Salon);
+            return View(await applicationDbContext.ToListAsync());
         }
 
         public async Task<IActionResult> Details(int? id)
@@ -31,32 +32,35 @@ namespace BarberShopManagementSystem.Controllers
                 return NotFound();
             }
 
-            var salon = await _context.Salons
+            var employee = await _context.Employees
+                .Include(e => e.Salon)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (salon == null)
+            if (employee == null)
             {
                 return NotFound();
             }
 
-            return View(salon);
+            return View(employee);
         }
 
         public IActionResult Create()
         {
+            ViewData["SalonId"] = new SelectList(_context.Salons, "Id", "Id");
             return View();
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,WorkingDays,StartHour,EndHour")] Salon salon)
+        public async Task<IActionResult> Create([Bind("Id,Name,SalonId,AvailableFrom,AvailableTo")] Employee employee)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(salon);
+                _context.Add(employee);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(salon);
+            ViewData["SalonId"] = new SelectList(_context.Salons, "Id", "Id", employee.SalonId);
+            return View(employee);
         }
 
         public async Task<IActionResult> Edit(int? id)
@@ -66,19 +70,21 @@ namespace BarberShopManagementSystem.Controllers
                 return NotFound();
             }
 
-            var salon = await _context.Salons.FindAsync(id);
-            if (salon == null)
+            var employee = await _context.Employees.FindAsync(id);
+            if (employee == null)
             {
                 return NotFound();
             }
-            return View(salon);
+            ViewData["SalonId"] = new SelectList(_context.Salons, "Id", "Id", employee.SalonId);
+            return View(employee);
         }
 
+        
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,WorkingDays,StartHour,EndHour")] Salon salon)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,SalonId,AvailableFrom,AvailableTo")] Employee employee)
         {
-            if (id != salon.Id)
+            if (id != employee.Id)
             {
                 return NotFound();
             }
@@ -87,12 +93,12 @@ namespace BarberShopManagementSystem.Controllers
             {
                 try
                 {
-                    _context.Update(salon);
+                    _context.Update(employee);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!SalonExists(salon.Id))
+                    if (!EmployeeExists(employee.Id))
                     {
                         return NotFound();
                     }
@@ -103,9 +109,10 @@ namespace BarberShopManagementSystem.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(salon);
+            ViewData["SalonId"] = new SelectList(_context.Salons, "Id", "Id", employee.SalonId);
+            return View(employee);
         }
-
+  
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -113,33 +120,34 @@ namespace BarberShopManagementSystem.Controllers
                 return NotFound();
             }
 
-            var salon = await _context.Salons
+            var employee = await _context.Employees
+                .Include(e => e.Salon)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (salon == null)
+            if (employee == null)
             {
                 return NotFound();
             }
 
-            return View(salon);
+            return View(employee);
         }
 
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var salon = await _context.Salons.FindAsync(id);
-            if (salon != null)
+            var employee = await _context.Employees.FindAsync(id);
+            if (employee != null)
             {
-                _context.Salons.Remove(salon);
+                _context.Employees.Remove(employee);
             }
 
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool SalonExists(int id)
+        private bool EmployeeExists(int id)
         {
-            return _context.Salons.Any(e => e.Id == id);
+            return _context.Employees.Any(e => e.Id == id);
         }
     }
 }
