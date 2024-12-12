@@ -57,14 +57,14 @@ using (var scope = app.Services.CreateScope())
 
         // Create default admin user
         var adminEmail = "b221210078@sakarya.edu.tr";
-        var adminPassword = "sau123"; // Changed to meet minimum requirements
+        var adminPassword = "sau123"; 
 
         var adminUser = await userManager.FindByEmailAsync(adminEmail);
         if (adminUser == null)
         {
             adminUser = new IdentityUser
             {
-                
+
                 UserName = adminEmail,
                 Email = adminEmail,
                 EmailConfirmed = true
@@ -99,9 +99,6 @@ using (var scope = app.Services.CreateScope())
         Console.WriteLine($"Unexpected Error: {ex.Message}");
     }
 }
-
-// Rest of your configuration remains the same
-// ...
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())

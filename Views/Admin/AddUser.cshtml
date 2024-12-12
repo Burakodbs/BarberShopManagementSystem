@@ -4,13 +4,33 @@
 <h2>Add User</h2>
 
 <form asp-action="AddUser" method="post">
-    <div class="form-group">
-        <label asp-for="Email">Email</label>
-        <input asp-for="Email" class="form-control" />
-    </div>
-    <div class="form-group">
-        <label asp-for="Password">Password</label>
-        <input asp-for="Password" type="password" class="form-control" />
-    </div>
-    <button type="submit" class="btn btn-primary">Add User</button>
+    
+        <div class="mb-3">
+            <label asp-for="FirstName" class="form-label"></label>
+            <input asp-for="FirstName" class="form-control" placeholder="Adınızı giriniz" />
+            <span asp-validation-for="FirstName" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label asp-for="LastName" class="form-label"></label>
+            <input asp-for="LastName" class="form-control" placeholder="Soyadınızı giriniz" />
+            <span asp-validation-for="LastName" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label asp-for="Email" class="form-label"></label>
+            <input asp-for="Email" class="form-control" placeholder="E-posta adresinizi giriniz" />
+            <span asp-validation-for="Email" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label asp-for="PhoneNumber" class="form-label"></label>
+            <input asp-for="PhoneNumber" class="form-control" placeholder="Telefon numaranızı giriniz" />
+            <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label asp-for="Password" class="form-label"></label>
+            <input asp-for="Password" class="form-control" placeholder="Şifre giriniz" />
+            <span asp-validation-for="Password" class="text-danger"></span>
+        </div>
+        <div class="d-grid">
+        <button type="submit" class="btn btn-primary btn-lg">Add User</button>
+        </div>
 </form>

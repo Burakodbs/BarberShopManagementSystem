@@ -7,58 +7,95 @@ namespace BarberShopManagementSystem.Data
 {
     public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : IdentityDbContext<IdentityUser>(options)
     {
+
+        public DbSet<Salon> Salons { get; set; }
+        public DbSet<Employee> Employees { get; set; }
+        public DbSet<Service> Services { get; set; }
+        public DbSet<Appointment> Appointments { get; set; }
         public DbSet<Customer> Customers { get; set; }
-       
+
+
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<Service>().HasData(
+                new Service
+                {
+                    Id = 1,
+                    Name = "Saç Kesimi",
+                    Price = 250,
+                    Duration = 60
+                },
+                new Service
+                {
+                    Id = 2,
+                    Name = "Sakal Kesimi",
+                    Price = 50,
+                    Duration = 30
+                },
+                new Service
+                {
+                    Id = 3,
+                    Name = "Saç Boyama",
+                    Price = 400,
+                    Duration = 120
+                },
+                new Service
+                {
+                    Id = 4,
+                    Name = "Cilt Bakımı",
+                    Price = 150,
+                    Duration = 60
+                },
+                new Service
+                {
+                    Id = 5,
+                    Name = "Saç Sakal Kesimi",
+                    Price = 300,
+                    Duration = 90
+                }
+            );
+
             base.OnModelCreating(modelBuilder);
 
-           
-            //// Seed Data for Salons
-            //modelBuilder.Entity<Salon>().HasData(
-            //    new Salon { Id = 1, Name = "Elite Barber", StartHour = new TimeSpan(8, 0, 0), EndHour = new TimeSpan(18, 0, 0) }
+            // Salon-Personel İlişkisi
+            modelBuilder.Entity<Salon>()
+                .HasMany(s => s.Employees)
+                .WithOne(e => e.Salon)
+                .HasForeignKey(e => e.SalonId)
+                .OnDelete(DeleteBehavior.Restrict);
 
-            //);
+            // Salon-Hizmet İlişkisi
+            //modelBuilder.Entity<Salon>()
+            //    .HasMany(s => s.Services)
+            //    .WithOne(se => se.Salon)
+            //    .HasForeignKey(se => se.SalonId)
+            //    .OnDelete(DeleteBehavior.Restrict);
 
-            //// Seed Data for Employees
-            //modelBuilder.Entity<Employee>().HasData(
-            //    new Employee { Id = 1, Name = "Ahmet Yılmaz", AvailableFrom = new TimeSpan(8, 0, 0), AvailableTo = new TimeSpan(16, 0, 0), SalonId = 1 },
-            //    new Employee { Id = 2, Name = "Mehmet Kaya", AvailableFrom = new TimeSpan(12, 0, 0), AvailableTo = new TimeSpan(20, 0, 0), SalonId = 1 }
-            //);
+            // Randevu İlişkileri
+            modelBuilder.Entity<Appointment>()
+                .HasOne(a => a.Salon)
+                .WithMany(s => s.Appointments)
+                .HasForeignKey(a => a.SalonId)
+                .OnDelete(DeleteBehavior.Restrict);
 
-            //modelBuilder.Entity<Service>().HasData(
-            //    new Service { Id = 1, SalonId = 1, ServiceName = "Saç Tıraşı", Duration = 60, Price = 250 },
-            //    new Service { Id = 2, SalonId = 1, ServiceName = "Sakal Tıraşı", Duration = 30, Price = 50 },
-            //    new Service { Id = 3, SalonId = 1, ServiceName = "Saç Sakal Tıraşı", Duration = 90, Price = 300 },
-            //    new Service { Id = 4, SalonId = 1, ServiceName = "Damat Tıraşı", Duration = 60, Price = 500 }
-            //);
+            modelBuilder.Entity<Appointment>()
+                .HasOne(a => a.Employee)
+                .WithMany(e => e.Appointments)
+                .HasForeignKey(a => a.EmployeeId)
+                .OnDelete(DeleteBehavior.Restrict);
 
-            // Seed Data for Appointments
-            //modelBuilder.Entity<Appointment>().HasData(
-            //    new Appointment
-            //    {
-            //        Id = 1,
-            //        SalonId = 1,
-            //        EmployeeId = 1,
-            //        ServiceId = 1,
-            //        CustomerId = "user1", // Kullanıcı kimliği
-            //        StartTime = DateTime.Today.AddHours(9),
-            //        EndTime = DateTime.Today.AddHours(9).AddMinutes(30),
-            //        IsApproved = true
-            //    },
-            //    new Appointment
-            //    {
-            //        Id = 2,
-            //        SalonId = 1,
-            //        EmployeeId = 2,
-            //        ServiceId = 3,
-            //        CustomerId = "user2",
-            //        StartTime = DateTime.Today.AddHours(14),
-            //        EndTime = DateTime.Today.AddHours(14).AddMinutes(90),
-            //        IsApproved = false
-            //    }
-            //);
+            modelBuilder.Entity<Appointment>()
+                .HasOne(a => a.Service)
+                .WithMany()
+                .HasForeignKey(a => a.ServiceId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Appointment>()
+                .Property(a => a.Status)
+                .HasConversion<int>();
         }
+
     }
 
 }
