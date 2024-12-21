@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BarberShopManagementSystem.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241212183448_UpdateModels")]
-    partial class UpdateModels
+    [Migration("20241214162104_UpdateModels3")]
+    partial class UpdateModels3
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -112,10 +112,8 @@ namespace BarberShopManagementSystem.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Expertise")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                    b.Property<int>("ExpertiseId")
+                        .HasColumnType("int");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -135,12 +133,13 @@ namespace BarberShopManagementSystem.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<string>("WorkDays")
+                    b.PrimitiveCollection<string>("WorkDays")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ExpertiseId");
 
                     b.HasIndex("SalonId");
 
@@ -192,9 +191,6 @@ namespace BarberShopManagementSystem.Migrations
                     b.Property<int>("Duration")
                         .HasColumnType("int");
 
-                    b.Property<int?>("EmployeeId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -204,8 +200,6 @@ namespace BarberShopManagementSystem.Migrations
                         .HasColumnType("decimal(18,2)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("EmployeeId");
 
                     b.ToTable("Services");
 
@@ -220,7 +214,7 @@ namespace BarberShopManagementSystem.Migrations
                         new
                         {
                             Id = 2,
-                            Duration = 60,
+                            Duration = 30,
                             Name = "Sakal Kesimi",
                             Price = 50m
                         },
@@ -489,20 +483,21 @@ namespace BarberShopManagementSystem.Migrations
 
             modelBuilder.Entity("BarberShopManagementSystem.Models.Employee", b =>
                 {
+                    b.HasOne("BarberShopManagementSystem.Models.Service", "ExpertService")
+                        .WithMany()
+                        .HasForeignKey("ExpertiseId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("BarberShopManagementSystem.Models.Salon", "Salon")
                         .WithMany("Employees")
                         .HasForeignKey("SalonId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.Navigation("Salon");
-                });
+                    b.Navigation("ExpertService");
 
-            modelBuilder.Entity("BarberShopManagementSystem.Models.Service", b =>
-                {
-                    b.HasOne("BarberShopManagementSystem.Models.Employee", null)
-                        .WithMany("ExpertService")
-                        .HasForeignKey("EmployeeId");
+                    b.Navigation("Salon");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -574,8 +569,6 @@ namespace BarberShopManagementSystem.Migrations
             modelBuilder.Entity("BarberShopManagementSystem.Models.Employee", b =>
                 {
                     b.Navigation("Appointments");
-
-                    b.Navigation("ExpertService");
                 });
 
             modelBuilder.Entity("BarberShopManagementSystem.Models.Salon", b =>

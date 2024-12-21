@@ -10,15 +10,15 @@ namespace BarberShopManagementSystem.Models
 
         [ForeignKey(nameof(Salon))]
         public int SalonId { get; set; }
-        public Salon Salon { get; set; }
+        public Salon? Salon { get; set; }
 
         [ForeignKey(nameof(Employee))]
         public int EmployeeId { get; set; }
-        public Employee Employee { get; set; }
+        public Employee? Employee { get; set; }
 
         [ForeignKey(nameof(Service))]
         public int ServiceId { get; set; }
-        public Service Service { get; set; }
+        public Service? Service { get; set; }
 
         [Required]
         public DateTime RandevuZamani { get; set; }

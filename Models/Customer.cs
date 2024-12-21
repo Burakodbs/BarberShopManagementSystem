@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Identity;
+using System.ComponentModel.DataAnnotations;
 
 namespace BarberShopManagementSystem.Models
 {
@@ -24,6 +25,7 @@ namespace BarberShopManagementSystem.Models
         public string PhoneNumber { get; set; }
 
         [Required]
-        public string IdentityUserId { get; set; } 
+        public string UserId { get; set; }
+        public IdentityUser User { get; set; }
     }
 }

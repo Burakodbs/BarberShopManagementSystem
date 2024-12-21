@@ -8,33 +8,32 @@ namespace BarberShopManagementSystem.Models
         [Key]
         public int Id { get; set; }
 
-        [Required]
-        [StringLength(50)]
+        [Required(ErrorMessage = "Ad alanı zorunludur")]
+        [StringLength(50, ErrorMessage = "Ad en fazla 50 karakter olabilir")]
         public string Name { get; set; }
 
-        [Required]
-        [StringLength(50)]
+        [Required(ErrorMessage = "Soyad alanı zorunludur")]
+        [StringLength(50, ErrorMessage = "Soyad en fazla 50 karakter olabilir")]
         public string Surname { get; set; }
 
-        [Phone]
-        [StringLength(20)]
+        [Phone(ErrorMessage = "Geçerli bir telefon numarası girin")]
+        [StringLength(20, ErrorMessage = "Telefon numarası en fazla 20 karakter olabilir")]
         public string PhoneNumber { get; set; }
 
+        [Range(1, int.MaxValue, ErrorMessage = "Bir salon seçmeniz gerekiyor")]
+        [Display(Name = "Salon")]
         [ForeignKey(nameof(Salon))]
         public int SalonId { get; set; }
-        public Salon Salon { get; set; }
+        public Salon? Salon { get; set; }
 
-        [Required]
-        [StringLength(50)]
-        public string Expertise { get; set; }
+        [Required(ErrorMessage = "Uzmanlık alanı zorunludur")]
+        [ForeignKey(nameof(ExpertService))]
+        public int ExpertiseId { get; set; }
+        public Service? ExpertService { get; set; }
 
-        // Çalışma günlerini string olarak tutacağız
-        [Required]
-        [StringLength(100)]
-        public string WorkDays { get; set; } // "Pazartesi,Salı,Çarşamba" gibi
+        [Required(ErrorMessage = "En az bir çalışma günü seçmeniz gerekiyor")]
+        public List<string> WorkDays { get; set; } = new List<string>();
 
-        // İlişkili koleksiyonlar
-        public ICollection<Service> ExpertService { get; set; }
-        public ICollection<Appointment> Appointments { get; set; }
+        public ICollection<Appointment> Appointments { get; set; } = new List<Appointment>();
     }
 }
