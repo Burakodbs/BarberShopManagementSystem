@@ -37,7 +37,9 @@ public class AccountController : Controller
                     UserName = model.Email,
                     Email = model.Email,
                     PhoneNumber = model.PhoneNumber
+                    
                 };
+                
 
                 var result = await _userManager.CreateAsync(user, model.Password);
 
@@ -50,7 +52,7 @@ public class AccountController : Controller
                         LastName = model.LastName,
                         Email = model.Email,
                         PhoneNumber = model.PhoneNumber,
-                        IdentityUserId = user.Id
+                        UserId = user.Id
                     };
 
                     // Customer tablosuna kaydet

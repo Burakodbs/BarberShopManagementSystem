@@ -23,24 +23,15 @@ namespace BarberShopManagementSystem.Models
         [Required]
         public DateTime RandevuZamani { get; set; }
 
-        [Required]
         [StringLength(50)]
-        public string CustomerName { get; set; }
+        public string? CustomerName { get; set; }
 
-        [Required]
+
         [Phone]
         [StringLength(20)]
-        public string CustomerPhone { get; set; }
+        public string? CustomerPhone { get; set; }
 
-        [Required]
-        public AppointmentStatus Status { get; set; }
+        public bool IsConfirmed { get; set; }
 
-    }
-    public enum AppointmentStatus
-    {
-        Waiting = 1,
-        Approved = 2,
-        Completed = 3,
-        Canceled = 4
     }
 }

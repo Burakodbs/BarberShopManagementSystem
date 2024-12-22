@@ -1,0 +1,46 @@
+﻿@model BarberShopManagementSystem.Models.Appointment
+
+@{
+    ViewData["Title"] = "Create Appointment";
+}
+
+<h2>Create Appointment</h2>
+
+<form asp-action="Create" method="post">
+    <div class="form-group">
+        <label asp-for="SalonId" class="control-label"></label>
+        <select asp-for="SalonId" class="form-control" asp-items="ViewBag.SalonId"></select>
+        <span asp-validation-for="SalonId" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="EmployeeId" class="control-label"></label>
+        <select asp-for="EmployeeId" class="form-control" asp-items="ViewBag.EmployeeId"></select>
+        <span asp-validation-for="EmployeeId" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="ServiceId" class="control-label"></label>
+        <select asp-for="ServiceId" class="form-control" asp-items="ViewBag.ServiceId"></select>
+        <span asp-validation-for="ServiceId" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="RandevuZamani" class="control-label"></label>
+        <select asp-for="RandevuZamani" class="form-control">
+            @foreach (var time in new[] { "09:00", "09:30", "10:00", "10:30", "11:00", "11:30", "12:00", "12:30" })
+            {
+                <option value="@time">@time</option>
+            }
+        </select>
+        <span asp-validation-for="RandevuZamani" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+@foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+{
+    <div class="text-danger">@error.ErrorMessage</div>
+}
+
+<a asp-action="Index" class="btn btn-secondary">Back to List</a>
