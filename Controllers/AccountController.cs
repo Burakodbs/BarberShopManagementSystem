@@ -45,7 +45,6 @@ public class AccountController : Controller
 
                 if (result.Succeeded)
                 {
-                    // Customer kaydı oluştur
                     var customer = new Customer
                     {
                         FirstName = model.FirstName,
@@ -55,7 +54,6 @@ public class AccountController : Controller
                         UserId = user.Id
                     };
 
-                    // Customer tablosuna kaydet
                     _context.Customers.Add(customer);
                     await _context.SaveChangesAsync();
 

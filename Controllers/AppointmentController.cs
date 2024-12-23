@@ -20,7 +20,6 @@ namespace BarberShopManagementSystem.Controllers
             _context = context;
         }
 
-        // GET: Appointment/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -47,7 +46,6 @@ namespace BarberShopManagementSystem.Controllers
             ViewData["SalonId"] = new SelectList(_context.Salons, "Id", "Address");
             ViewData["ServiceId"] = new SelectList(_context.Services, "Id", "Name");
 
-            // Bugünün tarihini ViewBag ile gönderiyoruz
             ViewBag.Today = DateTime.Now.ToString("yyyy-MM-dd");
 
             return View();
@@ -66,7 +64,6 @@ namespace BarberShopManagementSystem.Controllers
                 return Unauthorized();
             }
 
-            // Validate RandevuZamani
             if (appointment.RandevuZamani == null || appointment.RandevuZamani <= DateTime.Now)
             {
                 ModelState.AddModelError("RandevuZamani", "You cannot select a past date or time.");
@@ -78,7 +75,6 @@ namespace BarberShopManagementSystem.Controllers
 
             if (ModelState.IsValid)
             {
-                // Check for conflicting appointment
                 var conflictingAppointment = await _context.Appointments
                     .Where(a => a.EmployeeId == appointment.EmployeeId
                                 && a.RandevuZamani == appointment.RandevuZamani)
@@ -94,7 +90,6 @@ namespace BarberShopManagementSystem.Controllers
                 }
                 else
                 {
-                    // If no errors, process the appointment
                     appointment.CustomerName = customer.FirstName;
                     appointment.CustomerPhone = customer.PhoneNumber;
                     appointment.IsConfirmed = false;
@@ -105,17 +100,14 @@ namespace BarberShopManagementSystem.Controllers
                 }
             }
 
-            // Return view with error messages
             ViewData["SalonId"] = new SelectList(_context.Salons, "Id", "Address", appointment.SalonId);
             ViewData["ServiceId"] = new SelectList(_context.Services, "Id", "Name", appointment.ServiceId);
             ViewData["EmployeeId"] = new SelectList(_context.Employees, "Id", "Name", appointment.EmployeeId);
             return View(appointment);
         }
 
-        // GET: Appointment
         public async Task<IActionResult> Index()
         {
-            // Get logged-in user name
             string userEmail = User.Identity?.Name;
             var customer = _context.Customers.FirstOrDefault(c => c.Email == userEmail);
             if (customer == null)
@@ -128,7 +120,6 @@ namespace BarberShopManagementSystem.Controllers
                 return Unauthorized();
             }
 
-            // Fetch appointments for the logged-in user
             var userAppointments = _context.Appointments
                 .Include(a => a.Employee)
                 .Include(a => a.Salon)
@@ -139,8 +130,6 @@ namespace BarberShopManagementSystem.Controllers
         }
 
 
-
-        // GET: Appointment/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -161,7 +150,6 @@ namespace BarberShopManagementSystem.Controllers
             return View(appointment);
         }
 
-        // POST: Appointment/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)

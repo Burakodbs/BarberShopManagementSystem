@@ -57,7 +57,7 @@
                 const times = await response.json();
 
                 const timeDropdown = document.getElementById('AppointmentTime');
-                timeDropdown.innerHTML = ''; // Clear previous times
+                timeDropdown.innerHTML = '';
 
                 times.forEach(time => {
                     const option = document.createElement('option');
