@@ -7,9 +7,11 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using BarberShopManagementSystem.Data;
 using BarberShopManagementSystem.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace BarberShopManagementSystem.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class ServiceController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -99,5 +101,6 @@ namespace BarberShopManagementSystem.Controllers
         {
             return _context.Services.Any(e => e.Id == id);
         }
+
     }
 }

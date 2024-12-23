@@ -239,6 +239,21 @@ namespace BarberShopManagementSystem.Controllers
             return View(result);
         }
 
+        [HttpPost]
+        [Authorize(Roles = "Admin")]
+        public IActionResult ConfirmAppointment(int id)
+        {
+            var appointment = _context.Appointments.FirstOrDefault(a => a.Id == id);
 
+            if (appointment != null)
+            {
+                appointment.IsConfirmed = true;
+                _context.SaveChanges();
+            }
+
+            return RedirectToAction("AllAppointments");
+        }
+
+        
     }
 }

@@ -25,17 +25,12 @@
                         <td>@user.Email</td>
                         <td>
                             <div class="d-flex justify-content-start">
-                                <!-- Silme Butonu -->
                                 <form asp-action="DeleteUser" asp-controller="Admin" method="post" class="me-2">
                                     <input type="hidden" name="userId" value="@user.Id" />
                                     <button type="submit" class="btn btn-danger" title="Kullanıcıyı sil">
-                                        <i class="bi bi-trash"></i> Sil
+                                         Sil
                                     </button>
                                 </form>
-                                <!-- Düzenleme Butonu (Opsiyonel) -->
-                                <a href="@Url.Action("EditUser", "Admin", new { id = user.Id })" class="btn btn-warning" title="Kullanıcıyı düzenle">
-                                    <i class="bi bi-pencil-fill"></i> Düzenle
-                                </a>
                             </div>
                         </td>
                     </tr>
@@ -48,5 +43,9 @@
                 }
             </tbody>
         </table>
+    </div>
+
+    <div class="text-center mt-4">
+        <a asp-controller="Admin" asp-action="Dashboard" class="btn btn-secondary">Panel'e Geri Dön</a>
     </div>
 </div>

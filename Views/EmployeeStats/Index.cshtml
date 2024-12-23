@@ -1,0 +1,121 @@
+﻿@model IEnumerable<EmployeeAppointmentStatsViewModel>
+
+<h2>Çalışan Randevu İstatistikleri</h2>
+
+<div class="row mb-4">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Randevu Dağılımı</h5>
+                <canvas id="appointmentsChart"></canvas>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Gelir Dağılımı</h5>
+                <canvas id="earningsChart"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="table-responsive">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Çalışan</th>
+                <th>Toplam Randevu</th>
+                <th>Toplam Kazanç</th>
+                <th>Tamamlanan</th>
+                <th>Ort. Ücret</th>
+                <th>İşlemler</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.EmployeeName</td>
+                    <td>@item.TotalAppointments</td>
+                    <td>@item.TotalEarnings.ToString("C")</td>
+                    <td>@item.CompletedAppointments</td>
+                    <td>@item.AverageAppointmentPrice.ToString("C")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+<div class="text-center mt-4">
+    <a asp-controller="Admin" asp-action="Dashboard" class="btn btn-secondary">Panel'e Geri Dön</a>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            fetch('/EmployeeStats/GetChartData')
+                .then(response => response.json())
+                .then(data => {
+                    createAppointmentsChart(data);
+                    createEarningsChart(data);
+                    createStatusChart(data);
+                    createCompletionRateChart(data);
+                });
+        });
+
+        function createAppointmentsChart(data) {
+            const ctx = document.getElementById('appointmentsChart');
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: data.map(d => d.employeeName),
+                    datasets: [{
+                        label: 'Toplam Randevu Sayısı',
+                        data: data.map(d => d.totalAppointments),
+                        backgroundColor: 'rgba(54, 162, 235, 0.8)'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        }
+
+        function createEarningsChart(data) {
+            const ctx = document.getElementById('earningsChart');
+            new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: data.map(d => d.employeeName),
+                    datasets: [{
+                        data: data.map(d => d.totalEarnings),
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 0.8)',
+                            'rgba(54, 162, 235, 0.8)',
+                            'rgba(255, 206, 86, 0.8)',
+                            'rgba(75, 192, 192, 0.8)',
+                            'rgba(153, 102, 255, 0.8)'
+                        ]
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'right'
+                        }
+                    }
+                }
+            });
+        }
+
+    </script>
+}

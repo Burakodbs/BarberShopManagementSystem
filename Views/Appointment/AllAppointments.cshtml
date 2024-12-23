@@ -59,6 +59,7 @@
             <th>Price</th>
             <th>Duration</th>
             <th>Status</th>
+            <th>Actions</th>
         </tr>
     </thead>
     <tbody>
@@ -85,6 +86,14 @@
                             <span class="badge bg-warning">Pending</span>
                         }
                     </td>
+                    <td>
+                        @if (!appointment.IsConfirmed)
+                        {
+                            <form method="post" action="@Url.Action("ConfirmAppointment", "Appointment", new { id = appointment.Id })">
+                                <button type="submit" class="btn btn-success btn-sm">Confirm</button>
+                            </form>
+                        }
+                    </td>
                 </tr>
             }
         }
@@ -96,3 +105,7 @@
         }
     </tbody>
 </table>
+
+<div class="text-center mt-4">
+    <a asp-controller="Admin" asp-action="Dashboard" class="btn btn-secondary">Back to Panel</a>
+</div>

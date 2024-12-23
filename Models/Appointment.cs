@@ -38,4 +38,5 @@ namespace BarberShopManagementSystem.Models
         public bool IsConfirmed { get; set; }
 
     }
+
 }
