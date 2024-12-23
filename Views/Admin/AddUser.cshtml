@@ -1,36 +1,44 @@
 ﻿@using BarberShopManagementSystem.ViewModels
 @model AddUserViewModel
 
-<h2>Add User</h2>
+<div class="container mt-5">
+    <h2 class="text-center text-primary mb-4">Yeni Kullanıcı Ekle</h2>
 
-<form asp-action="AddUser" method="post">
-    
-        <div class="mb-3">
-            <label asp-for="FirstName" class="form-label"></label>
-            <input asp-for="FirstName" class="form-control" placeholder="Adınızı giriniz" />
-            <span asp-validation-for="FirstName" class="text-danger"></span>
+    <form asp-action="AddUser" method="post">
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label asp-for="FirstName" class="form-label">Adınız</label>
+                <input asp-for="FirstName" class="form-control" placeholder="Adınızı giriniz" />
+                <span asp-validation-for="FirstName" class="text-danger"></span>
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <label asp-for="LastName" class="form-label">Soyadınız</label>
+                <input asp-for="LastName" class="form-control" placeholder="Soyadınızı giriniz" />
+                <span asp-validation-for="LastName" class="text-danger"></span>
+            </div>
         </div>
+
         <div class="mb-3">
-            <label asp-for="LastName" class="form-label"></label>
-            <input asp-for="LastName" class="form-control" placeholder="Soyadınızı giriniz" />
-            <span asp-validation-for="LastName" class="text-danger"></span>
-        </div>
-        <div class="mb-3">
-            <label asp-for="Email" class="form-label"></label>
+            <label asp-for="Email" class="form-label">E-posta Adresiniz</label>
             <input asp-for="Email" class="form-control" placeholder="E-posta adresinizi giriniz" />
             <span asp-validation-for="Email" class="text-danger"></span>
         </div>
+
         <div class="mb-3">
-            <label asp-for="PhoneNumber" class="form-label"></label>
+            <label asp-for="PhoneNumber" class="form-label">Telefon Numaranız</label>
             <input asp-for="PhoneNumber" class="form-control" placeholder="Telefon numaranızı giriniz" />
             <span asp-validation-for="PhoneNumber" class="text-danger"></span>
         </div>
+
         <div class="mb-3">
-            <label asp-for="Password" class="form-label"></label>
-            <input asp-for="Password" class="form-control" placeholder="Şifre giriniz" />
+            <label asp-for="Password" class="form-label">Şifre</label>
+            <input asp-for="Password" type="password" class="form-control" placeholder="Şifre giriniz" />
             <span asp-validation-for="Password" class="text-danger"></span>
         </div>
-        <div class="d-grid">
-        <button type="submit" class="btn btn-primary btn-lg">Add User</button>
+
+        <div class="d-grid gap-2">
+            <button type="submit" class="btn btn-primary btn-lg">Kullanıcı Ekle</button>
         </div>
-</form>
+    </form>
+</div>

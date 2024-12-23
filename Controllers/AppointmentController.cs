@@ -93,6 +93,15 @@ namespace BarberShopManagementSystem.Controllers
                     appointment.CustomerName = customer.FirstName;
                     appointment.CustomerPhone = customer.PhoneNumber;
                     appointment.IsConfirmed = false;
+                    appointment.Employee = await _context.Employees.Where(e => e.Id == appointment.EmployeeId).FirstOrDefaultAsync();
+                    appointment.Service = await _context.Services.Where(s => s.Id == appointment.ServiceId).FirstOrDefaultAsync();
+                    if (appointment.Service == appointment.Employee.ExpertService)
+                    {
+                        appointment.Price = appointment.Service.Price + 100;
+
+                    }
+                    else { appointment.Price = appointment.Service.Price; }
+                    appointment.Duration = appointment.Service.Duration;
 
                     _context.Add(appointment);
                     await _context.SaveChangesAsync();
@@ -196,6 +205,40 @@ namespace BarberShopManagementSystem.Controllers
 
             return Json(times);
         }
+
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> AllAppointments(string statusFilter = "All", string sortOrder = "Date")
+        {
+            var appointments = _context.Appointments
+                .Include(a => a.Employee)
+                .Include(a => a.Salon)
+                .Include(a => a.Service)
+                .AsQueryable();
+
+            // Filter by status
+            if (statusFilter == "Confirmed")
+            {
+                appointments = appointments.Where(a => a.IsConfirmed);
+            }
+            else if (statusFilter == "Pending")
+            {
+                appointments = appointments.Where(a => !a.IsConfirmed);
+            }
+
+            // Sort by chosen order
+            appointments = sortOrder switch
+            {
+                "Date" => appointments.OrderBy(a => a.RandevuZamani),
+                "Customer" => appointments.OrderBy(a => a.CustomerName),
+                _ => appointments.OrderBy(a => a.RandevuZamani)
+            };
+
+            var result = await appointments.ToListAsync();
+            ViewBag.StatusFilter = statusFilter;
+            ViewBag.SortOrder = sortOrder;
+            return View(result);
+        }
+
 
     }
 }

@@ -10,28 +10,28 @@
                 <div class="card-body">
                     <form asp-action="Register" method="post">
                         <div class="mb-3">
-                            <label asp-for="FirstName" class="form-label"></label>
-                            <input asp-for="FirstName" class="form-control" placeholder="Adınızı giriniz" />
+                            <label asp-for="FirstName" class="form-label">Ad</label>
+                            <input asp-for="FirstName" class="form-control" placeholder="Adınızı giriniz" required />
                             <span asp-validation-for="FirstName" class="text-danger"></span>
                         </div>
                         <div class="mb-3">
-                            <label asp-for="LastName" class="form-label"></label>
-                            <input asp-for="LastName" class="form-control" placeholder="Soyadınızı giriniz" />
+                            <label asp-for="LastName" class="form-label">Soyad</label>
+                            <input asp-for="LastName" class="form-control" placeholder="Soyadınızı giriniz" required />
                             <span asp-validation-for="LastName" class="text-danger"></span>
                         </div>
                         <div class="mb-3">
-                            <label asp-for="Email" class="form-label"></label>
-                            <input asp-for="Email" class="form-control" placeholder="E-posta adresinizi giriniz" />
+                            <label asp-for="Email" class="form-label">E-posta</label>
+                            <input asp-for="Email" class="form-control" placeholder="E-posta adresinizi giriniz" type="email" required />
                             <span asp-validation-for="Email" class="text-danger"></span>
                         </div>
                         <div class="mb-3">
-                            <label asp-for="PhoneNumber" class="form-label"></label>
-                            <input asp-for="PhoneNumber" class="form-control" placeholder="Telefon numaranızı giriniz" />
+                            <label asp-for="PhoneNumber" class="form-label">Telefon</label>
+                            <input asp-for="PhoneNumber" class="form-control" placeholder="Telefon numaranızı giriniz" type="tel" required />
                             <span asp-validation-for="PhoneNumber" class="text-danger"></span>
                         </div>
                         <div class="mb-3">
-                            <label asp-for="Password" class="form-label"></label>
-                            <input asp-for="Password" class="form-control" placeholder="Şifrenizi giriniz" />
+                            <label asp-for="Password" class="form-label">Şifre</label>
+                            <input asp-for="Password" class="form-control" placeholder="Şifrenizi giriniz" type="password" required />
                             <span asp-validation-for="Password" class="text-danger"></span>
                         </div>
                         <div class="d-grid">
@@ -46,4 +46,3 @@
         </div>
     </div>
 </div>
-

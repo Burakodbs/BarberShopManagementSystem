@@ -26,6 +26,10 @@ namespace BarberShopManagementSystem.Models
         [StringLength(50)]
         public string? CustomerName { get; set; }
 
+        public decimal? Price { get; set; }
+
+        public int? Duration { get; set; }
+
 
         [Phone]
         [StringLength(20)]
