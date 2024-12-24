@@ -57,8 +57,8 @@ namespace BarberShopManagementSystem.Controllers
         .ToList();
             ViewBag.WorkDays = new List<string>
             {
-                "Pazartesi", "Salı", "Çarşamba", "Perşembe",
-                "Cuma", "Cumartesi", "Pazar"
+                "Monday", "Tuesday", "Wednesday", "Thursday",
+                "Friday", "Saturday"
             };
             return View();
         }

@@ -42,7 +42,57 @@
         </tbody>
     </table>
 
-    <<div class="text-center mt-4">
+    <div class="text-center mt-4">
         <a asp-controller="Admin" asp-action="Dashboard" class="btn btn-secondary">Panel'e Geri Dön</a>
     </div>
 </div>
+
+@{
+    ViewData["Title"] = "Servisler";
+}
+
+<div class="container">
+    <h2>Servisler</h2>
+    <div id="servicesTable">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Hizmet Adı</th>
+                    <th>Fiyat</th>
+                    <th>Süre (dk)</th>
+                </tr>
+            </thead>
+            <tbody id="servicesList">
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            loadServices();
+        });
+
+        function loadServices() {
+            $.ajax({
+                url: '/api/services/getall',
+                method: 'GET',
+                success: function (data) {
+                    $('#servicesList').empty();
+                    $.each(data, function (i, service) {
+                        var row = `<tr>
+                                    <td>${service.name}</td>
+                                    <td>${service.price} TL</td>
+                                    <td>${service.duration}</td>
+                                  </tr>`;
+                        $('#servicesList').append(row);
+                    });
+                },
+                error: function (error) {
+                    console.log('Hata:', error);
+                }
+            });
+        }
+    </script>
+}

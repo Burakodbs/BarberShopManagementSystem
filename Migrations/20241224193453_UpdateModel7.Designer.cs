@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BarberShopManagementSystem.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241223100632_UpdateModel7")]
+    [Migration("20241224193453_UpdateModel7")]
     partial class UpdateModel7
     {
         /// <inheritdoc />

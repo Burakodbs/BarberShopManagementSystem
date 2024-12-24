@@ -1,0 +1,8 @@
+﻿namespace BarberShopManagementSystem.Models
+{
+    public class HairAnalysisViewModel
+    {
+        public string RawApiResult { get; set; }
+        public HairRecommendations Recommendations { get; set; }
+    }
+}
