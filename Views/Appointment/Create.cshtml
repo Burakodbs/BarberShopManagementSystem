@@ -50,33 +50,35 @@
 
 @section Scripts {
     <script>
-        async function updateAvailableTimes() {
+                async function updateAvailableTimes() {
             const salonId = document.getElementById('SalonId').value;
+            const employeeId = document.getElementById('EmployeeId').value;
             const date = document.getElementById('AppointmentDate').value;
 
-            if (salonId && date) {
-                const response = await fetch(`/Appointment/GetAvailableTimes?salonId=${salonId}&date=${date}`);
+            if (salonId && employeeId && date) {
+                const response = await fetch(`/Appointment/GetAvailableTimes?salonId=${salonId}&employeeId=${employeeId}&date=${date}`);
                 const times = await response.json();
 
                 const timeDropdown = document.getElementById('AppointmentTime');
                 timeDropdown.innerHTML = '';
 
-                times.forEach(time => {
+                if (times.length === 0) {
                     const option = document.createElement('option');
-                    option.value = time;
-                    option.textContent = time;
+                    option.value = '';
+                    option.textContent = 'No available times - Employee not working';
                     timeDropdown.appendChild(option);
-                });
+                } else {
+                    times.forEach(time => {
+                        const option = document.createElement('option');
+                        option.value = time;
+                        option.textContent = time;
+                        timeDropdown.appendChild(option);
+                    });
+                }
             }
         }
 
-        document.getElementById('AppointmentTime').addEventListener('change', () => {
-            const date = document.getElementById('AppointmentDate').value;
-            const time = document.getElementById('AppointmentTime').value;
-
-            if (date && time) {
-                document.getElementById('RandevuZamani').value = `${date}T${time}`;
-            }
-        });
+        // Çalışan seçimi değiştiğinde de zamanları güncelle
+        document.getElementById('EmployeeId').addEventListener('change', updateAvailableTimes);
     </script>
 }

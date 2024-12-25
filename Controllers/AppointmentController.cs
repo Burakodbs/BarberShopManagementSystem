@@ -179,12 +179,23 @@ namespace BarberShopManagementSystem.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAvailableTimes(int salonId, DateTime date)
+        public async Task<IActionResult> GetAvailableTimes(int salonId, int employeeId, DateTime date)
         {
             var salon = await _context.Salons.FirstOrDefaultAsync(s => s.Id == salonId);
-            if (salon == null)
+            var employee = await _context.Employees.FirstOrDefaultAsync(e => e.Id == employeeId);
+
+            if (salon == null || employee == null)
             {
-                return BadRequest("Invalid Salon");
+                return BadRequest("Invalid Salon or Employee");
+            }
+
+            // Seçilen günün adını al (Monday, Tuesday, etc.)
+            string selectedDay = date.DayOfWeek.ToString();
+
+            // Çalışan o gün çalışmıyorsa boş liste dön
+            if (!employee.WorkDays.Contains(selectedDay))
+            {
+                return Json(new List<string>());
             }
 
             var openingTime = salon.OpeningTime;
@@ -196,8 +207,11 @@ namespace BarberShopManagementSystem.Controllers
                 times.Add(time.ToString(@"hh\:mm"));
             }
 
+            // O güne ait mevcut randevuları getir
             var bookedTimes = await _context.Appointments
-                .Where(a => a.SalonId == salonId && a.RandevuZamani.Date == date.Date)
+                .Where(a => a.SalonId == salonId &&
+                           a.EmployeeId == employeeId &&
+                           a.RandevuZamani.Date == date.Date)
                 .Select(a => a.RandevuZamani.TimeOfDay)
                 .ToListAsync();
 
