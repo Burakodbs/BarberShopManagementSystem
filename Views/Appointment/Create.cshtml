@@ -10,7 +10,7 @@
     <p>Please select a date and time for your appointment. Only available times are shown.</p>
 </div>
 
-<form asp-action="Create" method="post">
+<form asp-action="Create" method="post" id="appointmentForm">
     <div class="form-group mb-3">
         <label asp-for="SalonId" class="control-label">Salon</label>
         <select asp-for="SalonId" class="form-control" asp-items="ViewBag.SalonId" id="SalonId" onchange="updateAvailableTimes()"></select>
@@ -32,8 +32,8 @@
     <div class="form-group mb-3">
         <label class="control-label">Appointment Date and Time</label>
         <div class="d-flex">
-            <input type="date" class="form-control" id="AppointmentDate" min="@ViewBag.Today" onchange="updateAvailableTimes()" />
-            <select class="form-control ms-2" id="AppointmentTime"></select>
+            <input type="date" class="form-control" id="AppointmentDate" min="@ViewBag.Today" onchange="updateAvailableTimes()" required />
+            <select class="form-control ms-2" id="AppointmentTime" required></select>
         </div>
         <input type="hidden" id="RandevuZamani" name="RandevuZamani" />
         <span asp-validation-for="RandevuZamani" class="text-danger"></span>
@@ -50,35 +50,65 @@
 
 @section Scripts {
     <script>
-                async function updateAvailableTimes() {
+        async function updateAvailableTimes() {
             const salonId = document.getElementById('SalonId').value;
             const employeeId = document.getElementById('EmployeeId').value;
             const date = document.getElementById('AppointmentDate').value;
 
             if (salonId && employeeId && date) {
-                const response = await fetch(`/Appointment/GetAvailableTimes?salonId=${salonId}&employeeId=${employeeId}&date=${date}`);
-                const times = await response.json();
+                try {
+                    const response = await fetch(`/Appointment/GetAvailableTimes?salonId=${salonId}&employeeId=${employeeId}&date=${date}`);
+                    const times = await response.json();
 
-                const timeDropdown = document.getElementById('AppointmentTime');
-                timeDropdown.innerHTML = '';
+                    const timeDropdown = document.getElementById('AppointmentTime');
+                    timeDropdown.innerHTML = '';
 
-                if (times.length === 0) {
-                    const option = document.createElement('option');
-                    option.value = '';
-                    option.textContent = 'No available times - Employee not working';
-                    timeDropdown.appendChild(option);
-                } else {
-                    times.forEach(time => {
+                    if (times.length === 0) {
                         const option = document.createElement('option');
-                        option.value = time;
-                        option.textContent = time;
+                        option.value = '';
+                        option.textContent = 'No available times - Employee not working';
                         timeDropdown.appendChild(option);
-                    });
+                    } else {
+                        times.forEach(time => {
+                            const option = document.createElement('option');
+                            option.value = time;
+                            option.textContent = time;
+                            timeDropdown.appendChild(option);
+                        });
+                    }
+                } catch (error) {
+                    console.error('Error fetching available times:', error);
                 }
             }
         }
 
-        // Çalışan seçimi değiştiğinde de zamanları güncelle
+        // Form submit öncesi tarih ve saati birleştir
+        document.getElementById('appointmentForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const date = document.getElementById('AppointmentDate').value;
+            const time = document.getElementById('AppointmentTime').value;
+
+            if (!date || !time) {
+                alert('Please select both date and time');
+                return;
+            }
+
+            // Tarih ve saati birleştir
+            const dateTime = new Date(date + 'T' + time);
+            document.getElementById('RandevuZamani').value = dateTime.toISOString();
+
+            // Formu gönder
+            this.submit();
+        });
+
+        // Service değişikliğinde zamanları güncelle
+        document.getElementById('ServiceId').addEventListener('change', updateAvailableTimes);
+
+        // Çalışan seçimi değiştiğinde zamanları güncelle
         document.getElementById('EmployeeId').addEventListener('change', updateAvailableTimes);
+
+        // Sayfa yüklendiğinde mevcut seçimlere göre zamanları güncelle
+        document.addEventListener('DOMContentLoaded', updateAvailableTimes);
     </script>
 }
