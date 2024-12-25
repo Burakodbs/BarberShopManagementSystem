@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using BarberShopManagementSystem.Data;
 using BarberShopManagementSystem.Models;
 using Microsoft.AspNetCore.Authorization;
+using System.Globalization;
 
 namespace BarberShopManagementSystem.Controllers
 {
@@ -52,7 +53,6 @@ namespace BarberShopManagementSystem.Controllers
         }
 
 
-        [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(Appointment appointment)
@@ -75,38 +75,43 @@ namespace BarberShopManagementSystem.Controllers
 
             if (ModelState.IsValid)
             {
+                // Add 3 hours to compensate for timezone difference
+                appointment.RandevuZamani = appointment.RandevuZamani.AddHours(3);
+
                 var conflictingAppointment = await _context.Appointments
                     .Where(a => a.EmployeeId == appointment.EmployeeId
-                                && a.RandevuZamani == appointment.RandevuZamani)
+                               && a.RandevuZamani == appointment.RandevuZamani)
                     .FirstOrDefaultAsync();
 
                 if (conflictingAppointment != null)
                 {
-                    ModelState.AddModelError("RandevuZamani", "The selected time slot is not available. Please choose another time.");
+                    ModelState.AddModelError("RandevuZamani", "The selected time slot is not available.");
                     ViewData["SalonId"] = new SelectList(_context.Salons, "Id", "Address", appointment.SalonId);
                     ViewData["ServiceId"] = new SelectList(_context.Services, "Id", "Name", appointment.ServiceId);
                     ViewData["EmployeeId"] = new SelectList(_context.Employees, "Id", "Name", appointment.EmployeeId);
                     return View(appointment);
                 }
+
+                // Set appointment details
+                appointment.CustomerName = customer.FirstName;
+                appointment.CustomerPhone = customer.PhoneNumber;
+                appointment.IsConfirmed = false;
+                appointment.Employee = await _context.Employees.Where(e => e.Id == appointment.EmployeeId).FirstOrDefaultAsync();
+                appointment.Service = await _context.Services.Where(s => s.Id == appointment.ServiceId).FirstOrDefaultAsync();
+
+                if (appointment.Service == appointment.Employee.ExpertService)
+                {
+                    appointment.Price = appointment.Service.Price + 100;
+                }
                 else
                 {
-                    appointment.CustomerName = customer.FirstName;
-                    appointment.CustomerPhone = customer.PhoneNumber;
-                    appointment.IsConfirmed = false;
-                    appointment.Employee = await _context.Employees.Where(e => e.Id == appointment.EmployeeId).FirstOrDefaultAsync();
-                    appointment.Service = await _context.Services.Where(s => s.Id == appointment.ServiceId).FirstOrDefaultAsync();
-                    if (appointment.Service == appointment.Employee.ExpertService)
-                    {
-                        appointment.Price = appointment.Service.Price + 100;
-
-                    }
-                    else { appointment.Price = appointment.Service.Price; }
-                    appointment.Duration = appointment.Service.Duration;
-
-                    _context.Add(appointment);
-                    await _context.SaveChangesAsync();
-                    return RedirectToAction(nameof(Index));
+                    appointment.Price = appointment.Service.Price;
                 }
+                appointment.Duration = appointment.Service.Duration;
+
+                _context.Add(appointment);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
             }
 
             ViewData["SalonId"] = new SelectList(_context.Salons, "Id", "Address", appointment.SalonId);
@@ -124,19 +129,32 @@ namespace BarberShopManagementSystem.Controllers
                 return Unauthorized();
             }
 
-            if (string.IsNullOrEmpty(userEmail))
-            {
-                return Unauthorized();
-            }
-
-            var userAppointments = _context.Appointments
+            var userAppointments = await _context.Appointments
                 .Include(a => a.Employee)
                 .Include(a => a.Salon)
                 .Include(a => a.Service)
-                .Where(a => a.CustomerName == customer.FirstName);
+                .Where(a => a.CustomerName == customer.FirstName)
+                .Select(a => new Appointment
+                {
+                    Id = a.Id,
+                    SalonId = a.SalonId,
+                    Salon = a.Salon,
+                    EmployeeId = a.EmployeeId,
+                    Employee = a.Employee,
+                    ServiceId = a.ServiceId,
+                    Service = a.Service,
+                    RandevuZamani = a.RandevuZamani, // Adjust display time
+                    CustomerName = a.CustomerName,
+                    CustomerPhone = a.CustomerPhone,
+                    Price = a.Price,
+                    Duration = a.Duration,
+                    IsConfirmed = a.IsConfirmed
+                })
+                .ToListAsync();
 
-            return View(await userAppointments.ToListAsync());
+            return View(userAppointments);
         }
+
 
 
         public async Task<IActionResult> Delete(int? id)
@@ -189,7 +207,7 @@ namespace BarberShopManagementSystem.Controllers
                 return BadRequest("Invalid Salon or Employee");
             }
 
-            // Seçilen günün adını al (Monday, Tuesday, etc.)
+            // Seçilen günün adını al
             string selectedDay = date.DayOfWeek.ToString();
 
             // Çalışan o gün çalışmıyorsa boş liste dön
@@ -198,13 +216,16 @@ namespace BarberShopManagementSystem.Controllers
                 return Json(new List<string>());
             }
 
-            var openingTime = salon.OpeningTime;
-            var closingTime = salon.ClosingTime;
+            // OpeningTime ve ClosingTime: TimeSpan -> DateTime
+            var openingTime = date.Date.Add(salon.OpeningTime);
+            var closingTime = date.Date.Add(salon.ClosingTime);
+
+            
 
             var times = new List<string>();
-            for (var time = openingTime; time < closingTime; time = time.Add(TimeSpan.FromMinutes(30)))
+            for (var time = openingTime; time < closingTime; time = time.AddMinutes(30))
             {
-                times.Add(time.ToString(@"hh\:mm"));
+                times.Add(time.ToString("HH:mm"));
             }
 
             // O güne ait mevcut randevuları getir
@@ -212,13 +233,22 @@ namespace BarberShopManagementSystem.Controllers
                 .Where(a => a.SalonId == salonId &&
                            a.EmployeeId == employeeId &&
                            a.RandevuZamani.Date == date.Date)
-                .Select(a => a.RandevuZamani.TimeOfDay)
+                .Select(a => a.RandevuZamani) // RandevuZamani: DateTime
                 .ToListAsync();
 
-            times = times.Where(t => !bookedTimes.Contains(TimeSpan.Parse(t))).ToList();
+            
+
+            // Mevcut zamanlardan dolu saatleri çıkar
+            times = times
+                .Where(t => !bookedTimes.Any(b => b.TimeOfDay == TimeSpan.ParseExact(t, @"hh\:mm", CultureInfo.InvariantCulture)))
+                .ToList();
 
             return Json(times);
         }
+
+
+
+
 
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> AllAppointments(string statusFilter = "All", string sortOrder = "Date")
@@ -268,6 +298,31 @@ namespace BarberShopManagementSystem.Controllers
             return RedirectToAction("AllAppointments");
         }
 
-        
+        [HttpGet]
+        public IActionResult GetServiceDetails()
+        {
+            var services = _context.Services.Select(s => new
+            {
+                s.Id,
+                s.Name,
+                s.Price,
+                s.Duration
+            }).ToList();
+
+            return Json(services);
+        }
+
+        [HttpGet]
+        public IActionResult GetEmployeeDetails()
+        {
+            var employees = _context.Employees.Select(e => new
+            {
+                e.Id,
+                e.Name,
+                e.ExpertiseId
+            }).ToList();
+
+            return Json(employees);
+        }
     }
 }
