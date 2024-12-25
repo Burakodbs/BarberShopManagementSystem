@@ -1,18 +1,28 @@
 ﻿@model BarberShopManagementSystem.ViewModels.LoginViewModel
 
-<h2>Giriş Yap</h2>
-<form asp-action="Login" method="post">
-    <div>
-        <label for="Email">Email</label>
-        <input type="email" id="Email" name="Email" required />
-    </div>
-    <div>
-        <label for="Password">Şifre</label>
-        <input type="password" id="Password" name="Password" required />
-    </div>
-    <div>
-        <label for="RememberMe">Beni Hatırla</label>
-        <input type="checkbox" id="RememberMe" name="RememberMe" />
-    </div>
-    <button type="submit">Giriş Yap</button>
-</form>
+<div class="container mt-5">
+    <h2 class="text-center text-primary mb-4">Giriş Yap</h2>
+
+    <form asp-action="Login" method="post">
+        <div class="mb-3">
+            <label for="Email" class="form-label">E-posta Adresiniz</label>
+            <input type="email" id="Email" name="Email" class="form-control" placeholder="E-posta adresinizi giriniz" required />
+            <span asp-validation-for="Email" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label for="Password" class="form-label">Şifre</label>
+            <input type="password" id="Password" name="Password" class="form-control" placeholder="Şifrenizi giriniz" required />
+            <span asp-validation-for="Password" class="text-danger"></span>
+        </div>
+
+        <div class="form-check mb-3">
+            <input type="checkbox" id="RememberMe" name="RememberMe" class="form-check-input" />
+            <label for="RememberMe" class="form-check-label">Beni Hatırla</label>
+        </div>
+
+        <div class="d-grid gap-2">
+            <button type="submit" class="btn btn-primary btn-lg">Giriş Yap</button>
+        </div>
+    </form>
+</div>

@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BarberShopManagementSystem.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241214162104_UpdateModels3")]
-    partial class UpdateModels3
+    [Migration("20241224193453_UpdateModel7")]
+    partial class UpdateModel7
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -34,17 +34,24 @@ namespace BarberShopManagementSystem.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("CustomerName")
-                        .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("CustomerPhone")
-                        .IsRequired()
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)");
 
+                    b.Property<int?>("Duration")
+                        .HasColumnType("int");
+
                     b.Property<int>("EmployeeId")
                         .HasColumnType("int");
+
+                    b.Property<bool>("IsConfirmed")
+                        .HasColumnType("bit");
+
+                    b.Property<decimal?>("Price")
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<DateTime>("RandevuZamani")
                         .HasColumnType("datetime2");
@@ -53,9 +60,6 @@ namespace BarberShopManagementSystem.Migrations
                         .HasColumnType("int");
 
                     b.Property<int>("ServiceId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Status")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -86,10 +90,6 @@ namespace BarberShopManagementSystem.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<string>("IdentityUserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("LastName")
                         .IsRequired()
                         .HasMaxLength(50)
@@ -99,7 +99,13 @@ namespace BarberShopManagementSystem.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Customers");
                 });
@@ -479,6 +485,17 @@ namespace BarberShopManagementSystem.Migrations
                     b.Navigation("Salon");
 
                     b.Navigation("Service");
+                });
+
+            modelBuilder.Entity("BarberShopManagementSystem.Models.Customer", b =>
+                {
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("BarberShopManagementSystem.Models.Employee", b =>

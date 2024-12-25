@@ -1,0 +1,65 @@
+﻿@model IEnumerable<BarberShopManagementSystem.Models.Appointment>
+
+@{
+    ViewData["Title"] = "Admin Panel";
+}
+
+<div class="container mt-5">
+    <h2 class="text-center text-primary mb-4">Admin Panel - Bekleyen Randevular</h2>
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success">
+            @TempData["SuccessMessage"]
+        </div>
+    }
+
+    <div class="table-responsive">
+        <table class="table table-bordered table-striped">
+            <thead class="table-light">
+                <tr>
+                    <th>Müşteri Adı</th>
+                    <th>Telefon</th>
+                    <th>Salon</th>
+                    <th>Servis</th>
+                    <th>Çalışan</th>
+                    <th>Tarih & Saat</th>
+                    <th>Aksiyon</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (!Model.Any())
+                {
+                    <tr>
+                        <td colspan="7" class="text-center text-muted">Hiç bekleyen randevu bulunmamaktadır.</td>
+                    </tr>
+                }
+                else
+                {
+                    @foreach (var appointment in Model)
+                    {
+                        <tr>
+                            <td>@appointment.CustomerName</td>
+                            <td>@appointment.CustomerPhone</td>
+                            <td>@appointment.Salon?.Address</td>
+                            <td>@appointment.Service?.Name</td>
+                            <td>@appointment.Employee?.Name</td>
+                            <td>@appointment.RandevuZamani.ToString("yyyy-MM-dd HH:mm")</td>
+                            <td>
+                                <form asp-action="ConfirmAppointment" asp-controller="Admin" method="post" style="display:inline;">
+                                    <input type="hidden" name="id" value="@appointment.Id" />
+                                    <button type="submit" class="btn btn-success btn-sm" title="Randevuyu Onayla">
+                                        <i class="bi bi-check-lg"></i> Onayla
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+    <div class="text-center mt-4">
+        <a asp-controller="Admin" asp-action="Dashboard" class="btn btn-secondary">Panel'e Geri Dön</a>
+    </div>
+</div>

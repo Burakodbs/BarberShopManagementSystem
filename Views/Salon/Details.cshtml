@@ -1,80 +1,76 @@
 ﻿@model BarberShopManagementSystem.Models.Salon
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Salon Detayları";
 }
 
-<h1>Details</h1>
+<div class="container mt-5">
+    <h2 class="text-center text-primary mb-4">Salon Detayları</h2>
 
-<div>
-    <h4>Salon</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Name)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Name)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Address)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Address)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.PhoneNumber)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.PhoneNumber)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.OpeningTime)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.OpeningTime)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ClosingTime)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ClosingTime)
-        </dd>
-    </dl>
-</div>
-<div>
-    <h3>Services Offered</h3>
-    @if (Model.Services != null && Model.Services.Any())
-    {
-        <ul>
-            @foreach (var service in Model.Services)
+    <div class="card mb-4">
+        <div class="card-header bg-primary text-white fw-bold">Salon Bilgileri</div>
+        <div class="card-body">
+            <dl class="row">
+                <dt class="col-sm-3">Adı:</dt>
+                <dd class="col-sm-9">@Html.DisplayFor(model => model.Name)</dd>
+
+                <dt class="col-sm-3">Adres:</dt>
+                <dd class="col-sm-9">@Html.DisplayFor(model => model.Address)</dd>
+
+                <dt class="col-sm-3">Telefon Numarası:</dt>
+                <dd class="col-sm-9">@Html.DisplayFor(model => model.PhoneNumber)</dd>
+
+                <dt class="col-sm-3">Açılış Saati:</dt>
+                <dd class="col-sm-9">@Html.DisplayFor(model => model.OpeningTime)</dd>
+
+                <dt class="col-sm-3">Kapanış Saati:</dt>
+                <dd class="col-sm-9">@Html.DisplayFor(model => model.ClosingTime)</dd>
+            </dl>
+        </div>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-header bg-success text-white fw-bold">Sunulan Hizmetler</div>
+        <div class="card-body">
+            @if (Model.Services != null && Model.Services.Any())
             {
-                <li>@service.Name - @service.Price.ToString("C") (@service.Duration minutes)</li>
+                <ul class="list-group">
+                    @foreach (var service in Model.Services)
+                    {
+                        <li class="list-group-item">
+                            <strong>@service.Name</strong> - @service.Price.ToString("C")
+                            (<span class="text-muted">@service.Duration dakika</span>)
+                        </li>
+                    }
+                </ul>
             }
-        </ul>
-    }
-    else
-    {
-        <p>No services are associated with this salon.</p>
-    }
-</div>
-<div>
-    <h3>Assigned Employees</h3>
-    @if (Model.Employees != null && Model.Employees.Any())
-    {
-        <ul>
-            @foreach (var employee in Model.Employees)
+            else
             {
-                <li>@employee.Name @employee.Surname</li>
+                <p class="text-muted">Bu salona ait herhangi bir hizmet bulunmamaktadır.</p>
             }
-        </ul>
-    }
-    else
-    {
-        <p>No employees are associated with this salon.</p>
-    }
-</div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+        </div>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-header bg-warning text-dark fw-bold">Atanmış Çalışanlar</div>
+        <div class="card-body">
+            @if (Model.Employees != null && Model.Employees.Any())
+            {
+                <ul class="list-group">
+                    @foreach (var employee in Model.Employees)
+                    {
+                        <li class="list-group-item">@employee.Name @employee.Surname</li>
+                    }
+                </ul>
+            }
+            else
+            {
+                <p class="text-muted">Bu salona atanmış çalışan bulunmamaktadır.</p>
+            }
+        </div>
+    </div>
+
+    <div class="d-flex justify-content-between">
+        <a asp-action="Index" class="btn btn-secondary">Listeye Dön</a>
+    </div>
 </div>

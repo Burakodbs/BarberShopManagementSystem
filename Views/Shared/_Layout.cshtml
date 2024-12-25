@@ -33,7 +33,7 @@
                                 </a>
                                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
                                     <li>
-                                        <a class="dropdown-item" asp-controller="Account" asp-action="Appointments">Randevularım</a>
+                                        <a class="dropdown-item" asp-controller="Appointment" asp-action="Index">Randevularım</a>
                                     </li>
                                     <li>
                                         <hr class="dropdown-divider">
@@ -73,6 +73,7 @@
     </footer>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
     @await RenderSectionAsync("Scripts", required: false)
 
 </body>

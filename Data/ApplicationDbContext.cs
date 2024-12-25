@@ -91,9 +91,7 @@ namespace BarberShopManagementSystem.Data
                 .HasForeignKey(a => a.ServiceId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            modelBuilder.Entity<Appointment>()
-                .Property(a => a.Status)
-                .HasConversion<int>();
+            
         }
 
     }

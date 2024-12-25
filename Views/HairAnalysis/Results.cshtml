@@ -1,0 +1,25 @@
+﻿<!-- Views/HairAnalysis/Results.cshtml -->
+
+@model HairAnalysisViewModel
+
+<div class="container mt-4">
+    <div class="card mb-4">
+        <div class="card-header">
+            <h3>API Sonucu</h3>
+        </div>
+        <div class="card-body">
+            <pre>@Model.RawApiResult</pre>
+        </div>
+    </div>
+
+
+<div class="container mt-4">
+    <h3>Önerilen Saç Modelleri</h3>
+    <ul class="list-group mb-4">
+        @foreach (var style in Model.Recommendations.RecommendedStyles)
+        {
+            <li class="list-group-item">@style</li>
+        }
+    </ul>
+
+</div>

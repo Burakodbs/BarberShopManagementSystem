@@ -1,0 +1,71 @@
+﻿@model BarberShopManagementSystem.Models.Appointment
+
+@{
+    ViewData["Title"] = "Delete";
+}
+
+<h2 class="text-center text-danger mb-4">Delete Appointment</h2>
+
+<h3 class="text-center mb-4">Are you sure you want to delete this?</h3>
+
+<div class="container">
+    <h4>Appointment Details</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-3">
+            @Html.DisplayNameFor(model => model.Salon)
+        </dt>
+        <dd class="col-sm-9">
+            @Html.DisplayFor(model => model.Salon.Address)
+        </dd>
+
+        <dt class="col-sm-3">
+            @Html.DisplayNameFor(model => model.Employee)
+        </dt>
+        <dd class="col-sm-9">
+            @Html.DisplayFor(model => model.Employee.Name)
+        </dd>
+
+        <dt class="col-sm-3">
+            @Html.DisplayNameFor(model => model.Service)
+        </dt>
+        <dd class="col-sm-9">
+            @Html.DisplayFor(model => model.Service.Name)
+        </dd>
+
+        <dt class="col-sm-3">
+            @Html.DisplayNameFor(model => model.RandevuZamani)
+        </dt>
+        <dd class="col-sm-9">
+            @Html.DisplayFor(model => model.RandevuZamani)
+        </dd>
+
+        <dt class="col-sm-3">
+            @Html.DisplayNameFor(model => model.CustomerName)
+        </dt>
+        <dd class="col-sm-9">
+            @Html.DisplayFor(model => model.CustomerName)
+        </dd>
+
+        <dt class="col-sm-3">
+            @Html.DisplayNameFor(model => model.CustomerPhone)
+        </dt>
+        <dd class="col-sm-9">
+            @Html.DisplayFor(model => model.CustomerPhone)
+        </dd>
+
+        <dt class="col-sm-3">
+            @Html.DisplayNameFor(model => model.IsConfirmed)
+        </dt>
+        <dd class="col-sm-9">
+            @Html.DisplayFor(model => model.IsConfirmed)
+        </dd>
+    </dl>
+
+    <form asp-action="Delete" class="d-inline-block">
+        <input type="hidden" asp-for="Id" />
+        <button type="submit" class="btn btn-danger btn-lg">Delete</button>
+    </form>
+
+    <a asp-action="Index" class="btn btn-secondary btn-lg ms-2">Back to List</a>
+</div>

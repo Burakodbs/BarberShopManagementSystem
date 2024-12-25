@@ -1,7 +1,9 @@
-﻿using BarberShopManagementSystem.ViewModels;
+﻿using BarberShopManagementSystem.Data;
+using BarberShopManagementSystem.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace BarberShopManagementSystem.Controllers
 {
@@ -9,10 +11,13 @@ namespace BarberShopManagementSystem.Controllers
     public class AdminController : Controller
     {
         private readonly UserManager<IdentityUser> _userManager;
+        private readonly ApplicationDbContext _context;
 
-        public AdminController(UserManager<IdentityUser> userManager)
+        public AdminController(ApplicationDbContext context,UserManager<IdentityUser> userManager)
         {
+            _context = context;
             _userManager = userManager;
+
         }
 
         public IActionResult Dashboard()
@@ -64,6 +69,36 @@ namespace BarberShopManagementSystem.Controllers
             }
 
             return View(model);
+        }
+
+        public async Task<IActionResult> PendingAppointments()
+        {
+            var pendingAppointments = await _context.Appointments
+                .Include(a => a.Employee)
+                .Include(a => a.Salon)
+                .Include(a => a.Service)
+                .Where(a => !a.IsConfirmed)
+                .ToListAsync();
+
+            return View(pendingAppointments);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ConfirmAppointment(int id)
+        {
+            var appointment = await _context.Appointments.FindAsync(id);
+            if (appointment == null)
+            {
+                return NotFound();
+            }
+
+            appointment.IsConfirmed = true;
+            _context.Update(appointment);
+            await _context.SaveChangesAsync();
+
+            TempData["SuccessMessage"] = "Appointment has been confirmed successfully.";
+            return RedirectToAction(nameof(PendingAppointments));
         }
 
     }

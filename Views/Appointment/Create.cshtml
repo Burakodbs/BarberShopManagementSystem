@@ -1,0 +1,193 @@
+﻿@model BarberShopManagementSystem.Models.Appointment
+
+@{
+    ViewData["Title"] = "Create Appointment";
+}
+
+<h2 class="text-center mb-4 text-primary">Create Appointment</h2>
+
+<!-- Original form remains same until the submit button -->
+<form asp-action="Create" method="post" id="appointmentForm">
+    <div class="form-group mb-3">
+        <label asp-for="SalonId" class="control-label">Salon</label>
+        <select asp-for="SalonId" class="form-control" asp-items="ViewBag.SalonId" id="SalonId" onchange="updateAvailableTimes()"></select>
+        <span asp-validation-for="SalonId" class="text-danger"></span>
+    </div>
+
+    <div class="form-group mb-3">
+        <label asp-for="ServiceId" class="control-label">Service</label>
+        <select asp-for="ServiceId" class="form-control" asp-items="ViewBag.ServiceId" id="ServiceId"></select>
+        <span asp-validation-for="ServiceId" class="text-danger"></span>
+    </div>
+
+    <div class="form-group mb-3">
+        <label asp-for="EmployeeId" class="control-label">Employee</label>
+        <select asp-for="EmployeeId" class="form-control" asp-items="ViewBag.EmployeeId" id="EmployeeId"></select>
+        <span asp-validation-for="EmployeeId" class="text-danger"></span>
+    </div>
+
+    <div class="form-group mb-3">
+        <label class="control-label">Appointment Date and Time</label>
+        <div class="d-flex">
+            <input type="date" class="form-control" id="AppointmentDate" min="@ViewBag.Today" onchange="updateAvailableTimes()" required />
+            <select class="form-control ms-2" id="AppointmentTime" required></select>
+        </div>
+        <input type="hidden" id="RandevuZamani" name="RandevuZamani" />
+        <span asp-validation-for="RandevuZamani" class="text-danger"></span>
+    </div>
+
+    <div class="form-group mb-3">
+        <button type="button" onclick="showConfirmation()" class="btn btn-primary btn-lg">Create Appointment</button>
+    </div>
+</form>
+
+<!-- Confirmation Modal -->
+<div class="modal fade" id="confirmationModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Confirm Appointment</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <h6>Appointment Details:</h6>
+                <p><strong>Service:</strong> <span id="modalService"></span></p>
+                <p><strong>Price:</strong> <span id="modalPrice"></span></p>
+                <p><strong>Duration:</strong> <span id="modalDuration"></span></p>
+                <p><strong>Employee:</strong> <span id="modalEmployee"></span></p>
+                <p><strong>Date & Time:</strong> <span id="modalDateTime"></span></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" onclick="submitForm()">Confirm Appointment</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="mt-3">
+    <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+</div>
+
+
+@section Scripts {
+    <script>
+        let services = [];
+        let employees = [];
+
+        async function fetchServiceDetails() {
+            const response = await fetch('/Appointment/GetServiceDetails');
+            services = await response.json();
+        }
+
+        async function fetchEmployeeDetails() {
+            const response = await fetch('/Appointment/GetEmployeeDetails');
+            employees = await response.json();
+        }
+
+        async function showConfirmation() {
+            const form = document.getElementById('appointmentForm');
+            if (!form.checkValidity()) {
+                form.reportValidity();
+                return;
+            }
+
+            const serviceId = document.getElementById('ServiceId').value;
+            const employeeId = document.getElementById('EmployeeId').value;
+            const date = document.getElementById('AppointmentDate').value;
+            const time = document.getElementById('AppointmentTime').value;
+
+            const service = services.find(s => s.id == serviceId);
+            const employee = employees.find(e => e.id == employeeId);
+            let price = service.price;
+
+            if (employee.expertServiceId == serviceId) {
+                price += 100; // Expert service fee
+            }
+
+            document.getElementById('modalService').textContent = service.name;
+            document.getElementById('modalPrice').textContent = `₺${price}`;
+            document.getElementById('modalDuration').textContent = `${service.duration} minutes`;
+            document.getElementById('modalEmployee').textContent = employee.name;
+            document.getElementById('modalDateTime').textContent = `${date} ${time}`;
+
+            const modal = new bootstrap.Modal(document.getElementById('confirmationModal'));
+            modal.show();
+        }
+
+        function submitForm() {
+            const date = document.getElementById('AppointmentDate').value;
+            const time = document.getElementById('AppointmentTime').value;
+            const dateTime = new Date(date + 'T' + time);
+            document.getElementById('RandevuZamani').value = dateTime.toISOString();
+            document.getElementById('appointmentForm').submit();
+        }
+
+
+        async function updateAvailableTimes() {
+            const salonId = document.getElementById('SalonId').value;
+            const employeeId = document.getElementById('EmployeeId').value;
+            const date = document.getElementById('AppointmentDate').value;
+
+            if (salonId && employeeId && date) {
+                try {
+                    const response = await fetch(`/Appointment/GetAvailableTimes?salonId=${salonId}&employeeId=${employeeId}&date=${date}`);
+                    const times = await response.json();
+
+                    const timeDropdown = document.getElementById('AppointmentTime');
+                    timeDropdown.innerHTML = '';
+
+                    if (times.length === 0) {
+                        const option = document.createElement('option');
+                        option.value = '';
+                        option.textContent = 'No available times - Employee not working';
+                        timeDropdown.appendChild(option);
+                    } else {
+                        times.forEach(time => {
+                            const option = document.createElement('option');
+                            option.value = time;
+                            option.textContent = time;
+                            timeDropdown.appendChild(option);
+                        });
+                    }
+                } catch (error) {
+                    console.error('Error fetching available times:', error);
+                }
+            }
+        }
+
+        // Form submit öncesi tarih ve saati birleştir
+                document.getElementById('appointmentForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const date = document.getElementById('AppointmentDate').value;
+            const time = document.getElementById('AppointmentTime').value;
+
+            if (!date || !time) {
+                alert('Please select both date and time');
+                return;
+            }
+
+            // Create date in local timezone
+            const dateTime = new Date(date + 'T' + time);
+            // Store the local date time string
+            document.getElementById('RandevuZamani').value = dateTime.toISOString();
+
+            this.submit();
+        });
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            await Promise.all([fetchServiceDetails(), fetchEmployeeDetails()]);
+            updateAvailableTimes();
+        });
+
+        // Service değişikliğinde zamanları güncelle
+        document.getElementById('ServiceId').addEventListener('change', updateAvailableTimes);
+
+        // Çalışan seçimi değiştiğinde zamanları güncelle
+        document.getElementById('EmployeeId').addEventListener('change', updateAvailableTimes);
+
+        // Sayfa yüklendiğinde mevcut seçimlere göre zamanları güncelle
+        document.addEventListener('DOMContentLoaded', updateAvailableTimes);
+    </script>
+}

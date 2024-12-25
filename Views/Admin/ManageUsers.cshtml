@@ -1,28 +1,51 @@
 ﻿@model IEnumerable<Microsoft.AspNetCore.Identity.IdentityUser>
 
-<h1>Kayıtlı Kullanıcılar</h1>
-<p>
-    <a asp-action="AddUser">Yeni Kullanıcı ekle</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>Email</th>
-            <th>İşlemler</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var user in Model)
-        {
-            <tr>
-                <td>@user.Email</td>
-                <td>
-                    <form asp-action="DeleteUser" asp-controller="Admin" method="post">
-                        <input type="hidden" name="userId" value="@user.Id" />
-                        <button type="submit" class="btn btn-danger">Sil</button>
-                    </form>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+@{
+    ViewData["Title"] = "Kayıtlı Kullanıcılar";
+}
+
+<div class="container mt-5">
+    <h1 class="text-center mb-4 text-primary">Kayıtlı Kullanıcılar</h1>
+    <p class="text-center">
+        <a asp-action="AddUser" class="btn btn-success">Yeni Kullanıcı Ekle</a>
+    </p>
+
+    <div class="table-responsive">
+        <table class="table table-bordered table-striped">
+            <thead class="table-light">
+                <tr>
+                    <th>Email</th>
+                    <th>İşlemler</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var user in Model)
+                {
+                    <tr>
+                        <td>@user.Email</td>
+                        <td>
+                            <div class="d-flex justify-content-start">
+                                <form asp-action="DeleteUser" asp-controller="Admin" method="post" class="me-2">
+                                    <input type="hidden" name="userId" value="@user.Id" />
+                                    <button type="submit" class="btn btn-danger" title="Kullanıcıyı sil">
+                                         Sil
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                }
+                @if (!Model.Any())
+                {
+                    <tr>
+                        <td colspan="2" class="text-center text-muted">Hiç kullanıcı bulunamadı.</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <div class="text-center mt-4">
+        <a asp-controller="Admin" asp-action="Dashboard" class="btn btn-secondary">Panel'e Geri Dön</a>
+    </div>
+</div>

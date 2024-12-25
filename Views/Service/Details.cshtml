@@ -1,52 +1,47 @@
 ﻿@model BarberShopManagementSystem.Models.Service
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Service Details";
 }
 
-<h1>Details</h1>
+<div class="container mt-4">
+    <h1 class="text-center text-primary">Service Details</h1>
 
-<div>
-    <h4>Service</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Name)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Name)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Price)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Price)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Duration)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Duration)
-        </dd>
-    </dl>
-</div>
-<div>
-    <h3>Salons </h3>
-    @if (Model.Salons != null && Model.Salons.Any())
-    {
-        <ul>
-            @foreach (var salons in Model.Salons)
-            {
-                <li>@salons.Name</li>
-            }
-        </ul>
-    }
-    else
-    {
-        <p>No Salons are associated with this salon.</p>
-    }
-</div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <h4 class="card-title">Service Information</h4>
+            <hr />
+            <dl class="row">
+                <dt class="col-sm-3">Name</dt>
+                <dd class="col-sm-9">@Html.DisplayFor(model => model.Name)</dd>
+
+                <dt class="col-sm-3">Price</dt>
+                <dd class="col-sm-9">@Html.DisplayFor(model => model.Price, "{0:C}")</dd>
+
+                <dt class="col-sm-3">Duration</dt>
+                <dd class="col-sm-9">@Html.DisplayFor(model => model.Duration) minutes</dd>
+            </dl>
+        </div>
+    </div>
+
+    <div class="mt-4">
+        <h3 class="text-info">Associated Salons</h3>
+        @if (Model.Salons != null && Model.Salons.Any())
+        {
+            <ul class="list-group">
+                @foreach (var salon in Model.Salons)
+                {
+                    <li class="list-group-item">@salon.Name</li>
+                }
+            </ul>
+        }
+        else
+        {
+            <p class="text-muted">No salons are associated with this service.</p>
+        }
+    </div>
+
+    <div class="mt-4 text-center">
+        <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+    </div>
 </div>
