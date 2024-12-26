@@ -1,31 +1,25 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using BarberShopManagementSystem.Models;
-using System.Linq;
-using BarberShopManagementSystem.Data;
+﻿using BarberShopManagementSystem.Data;
+using BarberShopManagementSystem.ViewModels;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
-namespace BarberShopManagementSystem.Controllers
-{
+namespace BarberShopManagementSystem.Controllers {
     [Authorize(Roles = "Admin")]
-    public class EmployeeStatsController : Controller
-    {
+    public class EmployeeStatsController : Controller {
         private readonly ApplicationDbContext _context;
 
-        public EmployeeStatsController(ApplicationDbContext context)
-        {
+        public EmployeeStatsController(ApplicationDbContext context) {
             _context = context;
         }
 
-        public async Task<IActionResult> Index()
-        {
+        public async Task<IActionResult> Index() {
             var stats = await _context.Employees
                 .GroupJoin(
                     _context.Appointments,
                     e => e.Id,
                     a => a.EmployeeId,
-                    (employee, appointments) => new EmployeeAppointmentStatsViewModel
-                    {
+                    (employee,appointments) => new EmployeeAppointmentStatsViewModel {
                         EmployeeId = employee.Id,
                         EmployeeName = employee.Name,
                         TotalAppointments = appointments.Count(),
@@ -38,15 +32,13 @@ namespace BarberShopManagementSystem.Controllers
             return View(stats);
         }
 
-        public async Task<JsonResult> GetChartData()
-        {
+        public async Task<JsonResult> GetChartData() {
             var data = await _context.Employees
                 .GroupJoin(
                     _context.Appointments,
                     e => e.Id,
                     a => a.EmployeeId,
-                    (employee, appointments) => new
-                    {
+                    (employee,appointments) => new {
                         employeeName = employee.Name,
                         totalAppointments = appointments.Count(),
                         completedAppointments = appointments.Count(a => a.IsConfirmed == true),

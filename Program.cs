@@ -1,7 +1,6 @@
-using Microsoft.EntityFrameworkCore;
 using BarberShopManagementSystem.Data;
 using Microsoft.AspNetCore.Identity;
-using BarberShopManagementSystem.Models;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,8 +12,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 // Configure Identity with more flexible password options
-builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
-{
+builder.Services.AddIdentity<IdentityUser,IdentityRole>(options => {
     // Relax password requirements for testing
     options.Password.RequireDigit = false;
     options.Password.RequiredLength = 3;
@@ -25,8 +23,7 @@ builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
 .AddEntityFrameworkStores<ApplicationDbContext>()
 .AddDefaultTokenProviders();
 
-builder.Services.ConfigureApplicationCookie(options =>
-{
+builder.Services.ConfigureApplicationCookie(options => {
     options.LoginPath = "/Account/Login";
     options.AccessDeniedPath = "/Account/AccessDenied";
 });
@@ -34,22 +31,17 @@ builder.Services.ConfigureApplicationCookie(options =>
 var app = builder.Build();
 
 // Seed roles and admin user
-using (var scope = app.Services.CreateScope())
-{
-    try
-    {
+using(var scope = app.Services.CreateScope()) {
+    try {
         var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
         var userManager = scope.ServiceProvider.GetRequiredService<UserManager<IdentityUser>>();
 
         // Create Admin role if it doesn't exist
-        if (!await roleManager.RoleExistsAsync("Admin"))
-        {
+        if(!await roleManager.RoleExistsAsync("Admin")) {
             var roleResult = await roleManager.CreateAsync(new IdentityRole("Admin"));
-            if (!roleResult.Succeeded)
-            {
+            if(!roleResult.Succeeded) {
                 // Log role creation errors
-                foreach (var error in roleResult.Errors)
-                {
+                foreach(var error in roleResult.Errors) {
                     Console.WriteLine($"Role Creation Error: {error.Description}");
                 }
             }
@@ -57,52 +49,43 @@ using (var scope = app.Services.CreateScope())
 
         // Create default admin user
         var adminEmail = "b221210078@sakarya.edu.tr";
-        var adminPassword = "sau123"; 
+        var adminPassword = "sau123";
 
         var adminUser = await userManager.FindByEmailAsync(adminEmail);
-        if (adminUser == null)
-        {
-            adminUser = new IdentityUser
-            {
+        if(adminUser == null) {
+            adminUser = new IdentityUser {
 
                 UserName = adminEmail,
                 Email = adminEmail,
                 EmailConfirmed = true
             };
 
-            var createResult = await userManager.CreateAsync(adminUser, adminPassword);
-            if (createResult.Succeeded)
-            {
-                var roleResult = await userManager.AddToRoleAsync(adminUser, "Admin");
-                if (!roleResult.Succeeded)
-                {
+            var createResult = await userManager.CreateAsync(adminUser,adminPassword);
+            if(createResult.Succeeded) {
+                var roleResult = await userManager.AddToRoleAsync(adminUser,"Admin");
+                if(!roleResult.Succeeded) {
                     // Log role assignment errors
-                    foreach (var error in roleResult.Errors)
-                    {
+                    foreach(var error in roleResult.Errors) {
                         Console.WriteLine($"Role Assignment Error: {error.Description}");
                     }
                 }
             }
-            else
-            {
+            else {
                 // Log user creation errors
-                foreach (var error in createResult.Errors)
-                {
+                foreach(var error in createResult.Errors) {
                     Console.WriteLine($"User Creation Error: {error.Description}");
                 }
             }
         }
     }
-    catch (Exception ex)
-    {
+    catch(Exception ex) {
         // Log any unexpected errors
         Console.WriteLine($"Unexpected Error: {ex.Message}");
     }
 }
 
 // Configure the HTTP request pipeline.
-if (!app.Environment.IsDevelopment())
-{
+if(!app.Environment.IsDevelopment()) {
     app.UseExceptionHandler("/Home/Error");
     app.UseHsts();
 }

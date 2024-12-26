@@ -1,25 +1,18 @@
-﻿using System.Diagnostics;
-using BarberShopManagementSystem.Models;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 
-namespace BarberShopManagementSystem.Controllers
-{
-    public class HomeController : Controller
-    {
+namespace BarberShopManagementSystem.Controllers {
+    public class HomeController : Controller {
         private readonly ILogger<HomeController> _logger;
 
-        public HomeController(ILogger<HomeController> logger)
-        {
+        public HomeController(ILogger<HomeController> logger) {
             _logger = logger;
         }
 
-        public IActionResult Index()
-        {
+        public IActionResult Index() {
             return View();
         }
 
-        public IActionResult Privacy()
-        {
+        public IActionResult Privacy() {
             return View();
         }
 

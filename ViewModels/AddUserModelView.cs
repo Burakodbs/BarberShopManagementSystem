@@ -1,9 +1,7 @@
-﻿namespace BarberShopManagementSystem.ViewModels
-{
+﻿namespace BarberShopManagementSystem.ViewModels {
     using System.ComponentModel.DataAnnotations;
 
-    public class AddUserViewModel
-    {
+    public class AddUserViewModel {
         [Required]
         [DataType(DataType.Text)]
         [Display(Name = "İsim")]

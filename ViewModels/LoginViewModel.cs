@@ -1,10 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace BarberShopManagementSystem.ViewModels
-{
-    public class LoginViewModel
-    {
-        
+namespace BarberShopManagementSystem.ViewModels {
+    public class LoginViewModel {
+
         [Required]
         [EmailAddress]
         public string Email { get; set; }

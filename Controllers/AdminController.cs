@@ -5,74 +5,61 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-namespace BarberShopManagementSystem.Controllers
-{
+namespace BarberShopManagementSystem.Controllers {
     [Authorize(Roles = "Admin")]
-    public class AdminController : Controller
-    {
+    public class AdminController : Controller {
         private readonly UserManager<IdentityUser> _userManager;
         private readonly ApplicationDbContext _context;
 
-        public AdminController(ApplicationDbContext context,UserManager<IdentityUser> userManager)
-        {
+        public AdminController(ApplicationDbContext context,UserManager<IdentityUser> userManager) {
             _context = context;
             _userManager = userManager;
 
         }
 
-        public IActionResult Dashboard()
-        {
+        public IActionResult Dashboard() {
             return View();
         }
 
-        public IActionResult ManageUsers()
-        {
+        public IActionResult ManageUsers() {
             var users = _userManager.Users.ToList();
             return View(users);
         }
 
         [HttpPost]
-        public async Task<IActionResult> DeleteUser(string userId)
-        {
+        public async Task<IActionResult> DeleteUser(string userId) {
             var user = await _userManager.FindByIdAsync(userId);
 
-            if (user != null)
-            {
+            if(user != null) {
                 await _userManager.DeleteAsync(user);
             }
 
             return RedirectToAction("ManageUsers");
         }
 
-        public IActionResult AddUser()
-        {
+        public IActionResult AddUser() {
             return View(new AddUserViewModel());
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddUser(AddUserViewModel model)
-        {
-            if (ModelState.IsValid)
-            {
-                var user = new IdentityUser { UserName = model.Email, Email = model.Email };
-                var result = await _userManager.CreateAsync(user, model.Password);
+        public async Task<IActionResult> AddUser(AddUserViewModel model) {
+            if(ModelState.IsValid) {
+                var user = new IdentityUser { UserName = model.Email,Email = model.Email };
+                var result = await _userManager.CreateAsync(user,model.Password);
 
-                if (result.Succeeded)
-                {
+                if(result.Succeeded) {
                     return RedirectToAction("ManageUsers");
                 }
 
-                foreach (var error in result.Errors)
-                {
-                    ModelState.AddModelError(string.Empty, error.Description);
+                foreach(var error in result.Errors) {
+                    ModelState.AddModelError(string.Empty,error.Description);
                 }
             }
 
             return View(model);
         }
 
-        public async Task<IActionResult> PendingAppointments()
-        {
+        public async Task<IActionResult> PendingAppointments() {
             var pendingAppointments = await _context.Appointments
                 .Include(a => a.Employee)
                 .Include(a => a.Salon)
@@ -85,11 +72,9 @@ namespace BarberShopManagementSystem.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> ConfirmAppointment(int id)
-        {
+        public async Task<IActionResult> ConfirmAppointment(int id) {
             var appointment = await _context.Appointments.FindAsync(id);
-            if (appointment == null)
-            {
+            if(appointment == null) {
                 return NotFound();
             }
 

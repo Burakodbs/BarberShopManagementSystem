@@ -1,9 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace BarberShopManagementSystem.ViewModels
-{
-    public class RegisterViewModel
-    {
+namespace BarberShopManagementSystem.ViewModels {
+    public class RegisterViewModel {
         [Required]
         [DataType(DataType.Text)]
         [Display(Name = "İsim")]

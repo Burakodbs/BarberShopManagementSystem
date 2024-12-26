@@ -1,7 +1,5 @@
-﻿namespace BarberShopManagementSystem.Models
-{
-    public class EmployeeAppointmentStatsViewModel
-    {
+﻿namespace BarberShopManagementSystem.ViewModels {
+    public class EmployeeAppointmentStatsViewModel {
         public int EmployeeId { get; set; }
         public string EmployeeName { get; set; }
         public int TotalAppointments { get; set; }

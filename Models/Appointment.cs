@@ -1,10 +1,8 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
-namespace BarberShopManagementSystem.Models
-{
-    public class Appointment
-    {
+namespace BarberShopManagementSystem.Models {
+    public class Appointment {
         [Key]
         public int Id { get; set; }
 
@@ -29,7 +27,6 @@ namespace BarberShopManagementSystem.Models
         public decimal? Price { get; set; }
 
         public int? Duration { get; set; }
-
 
         [Phone]
         [StringLength(20)]

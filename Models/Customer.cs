@@ -1,10 +1,8 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using System.ComponentModel.DataAnnotations;
 
-namespace BarberShopManagementSystem.Models
-{
-    public class Customer
-    {
+namespace BarberShopManagementSystem.Models {
+    public class Customer {
         [Key]
         public int Id { get; set; }
 

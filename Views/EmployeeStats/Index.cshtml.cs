@@ -1,12 +1,8 @@
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace BarberShopManagementSystem.Views.EmployeePerformance
-{
-    public class DailyPerformanceModel : PageModel
-    {
-        public void OnGet()
-        {
+namespace BarberShopManagementSystem.Views.EmployeePerformance {
+    public class DailyPerformanceModel : PageModel {
+        public void OnGet() {
         }
     }
 }

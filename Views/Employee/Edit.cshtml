@@ -1,14 +1,14 @@
 ﻿@model BarberShopManagementSystem.Models.Employee
 
 @{
-    ViewData["Title"] = "Create Employee";
+    ViewData["Title"] = "Edit Employee";
 }
 
-<h2 class="text-center mb-4">Create New Employee</h2>
+<h2 class="text-center mb-4">Edit Employee</h2>
 
 <div class="row justify-content-center">
     <div class="col-md-6">
-        <form asp-action="Create">
+        <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
 
             <div class="mb-3">
@@ -40,7 +40,6 @@
                 </select>
                 <span asp-validation-for="SalonId" class="text-danger"></span>
             </div>
-
 
             <div class="mb-3">
                 <div class="form-check">
@@ -78,7 +77,7 @@
 
             <div class="d-flex justify-content-between">
                 <a asp-action="Index" class="btn btn-secondary">Back to List</a>
-                <button type="submit" class="btn btn-primary">Create</button>
+                <button type="submit" class="btn btn-primary">Edit</button>
             </div>
         </form>
     </div>

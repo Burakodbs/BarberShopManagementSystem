@@ -1,12 +1,10 @@
 ﻿using BarberShopManagementSystem.Models;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
-namespace BarberShopManagementSystem.Data
-{
-    public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : IdentityDbContext<IdentityUser>(options)
-    {
+namespace BarberShopManagementSystem.Data {
+    public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : IdentityDbContext<IdentityUser>(options) {
 
         public DbSet<Salon> Salons { get; set; }
         public DbSet<Employee> Employees { get; set; }
@@ -16,39 +14,33 @@ namespace BarberShopManagementSystem.Data
 
 
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
+        protected override void OnModelCreating(ModelBuilder modelBuilder) {
             modelBuilder.Entity<Service>().HasData(
-                new Service
-                {
+                new Service {
                     Id = 1,
                     Name = "Saç Kesimi",
                     Price = 250,
                     Duration = 60
                 },
-                new Service
-                {
+                new Service {
                     Id = 2,
                     Name = "Sakal Kesimi",
                     Price = 50,
                     Duration = 30
                 },
-                new Service
-                {
+                new Service {
                     Id = 3,
                     Name = "Saç Boyama",
                     Price = 400,
                     Duration = 120
                 },
-                new Service
-                {
+                new Service {
                     Id = 4,
                     Name = "Cilt Bakımı",
                     Price = 150,
                     Duration = 60
                 },
-                new Service
-                {
+                new Service {
                     Id = 5,
                     Name = "Saç Sakal Kesimi",
                     Price = 300,
@@ -91,7 +83,7 @@ namespace BarberShopManagementSystem.Data
                 .HasForeignKey(a => a.ServiceId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            
+
         }
 
     }
