@@ -162,6 +162,19 @@ namespace BarberShopManagementSystem.Controllers {
             return RedirectToAction(nameof(Index));
         }
 
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        [Route("Appointment/DeleteConfirmed2/{id}")]
+        public async Task<IActionResult> DeleteConfirmed2(int id) {
+            var appointment = await _context.Appointments.FindAsync(id);
+            if(appointment != null) {
+                _context.Appointments.Remove(appointment);
+            }
+
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(AllAppointments));
+        }
+
         private bool AppointmentExists(int id) {
             return _context.Appointments.Any(e => e.Id == id);
         }

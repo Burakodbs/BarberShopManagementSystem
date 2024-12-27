@@ -49,7 +49,7 @@ using(var scope = app.Services.CreateScope()) {
 
         // Create default admin user
         var adminEmail = "b221210078@sakarya.edu.tr";
-        var adminPassword = "sau123";
+        var adminPassword = "sau";
 
         var adminUser = await userManager.FindByEmailAsync(adminEmail);
         if(adminUser == null) {

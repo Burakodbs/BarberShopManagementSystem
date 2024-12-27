@@ -12,8 +12,6 @@ namespace BarberShopManagementSystem.Data {
         public DbSet<Appointment> Appointments { get; set; }
         public DbSet<Customer> Customers { get; set; }
 
-
-
         protected override void OnModelCreating(ModelBuilder modelBuilder) {
             modelBuilder.Entity<Service>().HasData(
                 new Service {
@@ -56,13 +54,6 @@ namespace BarberShopManagementSystem.Data {
                 .WithOne(e => e.Salon)
                 .HasForeignKey(e => e.SalonId)
                 .OnDelete(DeleteBehavior.Restrict);
-
-            // Salon-Hizmet İlişkisi
-            //modelBuilder.Entity<Salon>()
-            //    .HasMany(s => s.Services)
-            //    .WithOne(se => se.Salon)
-            //    .HasForeignKey(se => se.SalonId)
-            //    .OnDelete(DeleteBehavior.Restrict);
 
             // Randevu İlişkileri
             modelBuilder.Entity<Appointment>()

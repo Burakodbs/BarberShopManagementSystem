@@ -87,12 +87,19 @@
                         }
                     </td>
                     <td>
-                        @if (!appointment.IsConfirmed)
-                        {
-                            <form method="post" action="@Url.Action("ConfirmAppointment", "Appointment", new { id = appointment.Id })">
-                                <button type="submit" class="btn btn-success btn-sm">Confirm</button>
+                        <div class="d-flex gap-2">
+                            @if (!appointment.IsConfirmed)
+                            {
+                                <form method="post" action="@Url.Action("ConfirmAppointment", "Appointment", new { id = appointment.Id })">
+                                    <button type="submit" class="btn btn-success btn-sm">Confirm</button>
+                                </form>
+                            }
+                            <form method="post" action="@Url.Action("DeleteConfirmed2", "Appointment", new { id = appointment.Id })"
+                                  onsubmit="return confirm('Bu randevuyu silmek istediğinizden emin misiniz?');">
+                                @Html.AntiForgeryToken()
+                                <button type="submit" class="btn btn-danger btn-sm">Delete</button>
                             </form>
-                        }
+                        </div>
                     </td>
                 </tr>
             }
