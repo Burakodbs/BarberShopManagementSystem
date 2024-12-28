@@ -243,7 +243,7 @@ namespace BarberShopManagementSystem.Migrations
                             Id = 5,
                             Duration = 90,
                             Name = "Saç Sakal Kesimi",
-                            Price = 300m
+                            Price = 400m
                         });
                 });
 
@@ -465,19 +465,19 @@ namespace BarberShopManagementSystem.Migrations
                     b.HasOne("BarberShopManagementSystem.Models.Employee", "Employee")
                         .WithMany("Appointments")
                         .HasForeignKey("EmployeeId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("BarberShopManagementSystem.Models.Salon", "Salon")
                         .WithMany("Appointments")
                         .HasForeignKey("SalonId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("BarberShopManagementSystem.Models.Service", "Service")
                         .WithMany()
                         .HasForeignKey("ServiceId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Employee");
@@ -509,7 +509,7 @@ namespace BarberShopManagementSystem.Migrations
                     b.HasOne("BarberShopManagementSystem.Models.Salon", "Salon")
                         .WithMany("Employees")
                         .HasForeignKey("SalonId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("ExpertService");

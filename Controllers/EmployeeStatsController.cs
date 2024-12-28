@@ -23,9 +23,9 @@ namespace BarberShopManagementSystem.Controllers {
                         EmployeeId = employee.Id,
                         EmployeeName = employee.Name,
                         TotalAppointments = appointments.Count(),
-                        TotalEarnings = (decimal)appointments.Sum(a => a.Price),
+                        TotalEarnings = (decimal)appointments.Where(a => a.IsConfirmed == true).Sum(a => a.Price),
                         CompletedAppointments = appointments.Count(a => a.IsConfirmed == true),
-                        AverageAppointmentPrice = (decimal)(appointments.Any() ? appointments.Average(a => a.Price) : 0),
+                        AverageAppointmentPrice = (decimal)(appointments.Any(a => a.IsConfirmed == true) ? appointments.Average(a => a.Price) : 0),
                     })
                 .ToListAsync();
 
