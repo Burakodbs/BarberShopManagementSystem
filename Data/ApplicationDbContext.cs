@@ -13,6 +13,7 @@ namespace BarberShopManagementSystem.Data {
         public DbSet<Customer> Customers { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder) {
+
             modelBuilder.Entity<Service>().HasData(
                 new Service {
                     Id = 1,
@@ -41,10 +42,11 @@ namespace BarberShopManagementSystem.Data {
                 new Service {
                     Id = 5,
                     Name = "Saç Sakal Kesimi",
-                    Price = 300,
+                    Price = 400,
                     Duration = 90
                 }
             );
+
 
             base.OnModelCreating(modelBuilder);
 
@@ -53,31 +55,27 @@ namespace BarberShopManagementSystem.Data {
                 .HasMany(s => s.Employees)
                 .WithOne(e => e.Salon)
                 .HasForeignKey(e => e.SalonId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.Cascade);
 
             // Randevu İlişkileri
             modelBuilder.Entity<Appointment>()
                 .HasOne(a => a.Salon)
                 .WithMany(s => s.Appointments)
                 .HasForeignKey(a => a.SalonId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.NoAction);
 
             modelBuilder.Entity<Appointment>()
                 .HasOne(a => a.Employee)
                 .WithMany(e => e.Appointments)
                 .HasForeignKey(a => a.EmployeeId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<Appointment>()
                 .HasOne(a => a.Service)
                 .WithMany()
                 .HasForeignKey(a => a.ServiceId)
-                .OnDelete(DeleteBehavior.Restrict);
-
-
+                .OnDelete(DeleteBehavior.NoAction);
         }
-
     }
-
 }
 

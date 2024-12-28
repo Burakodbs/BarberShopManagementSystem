@@ -33,7 +33,7 @@ namespace BarberShopManagementSystem.Controllers {
 
         public IActionResult Create() {
             ViewData["EmployeeId"] = new SelectList(_context.Employees,"Id","Name");
-            ViewData["SalonId"] = new SelectList(_context.Salons,"Id","Address");
+            ViewData["SalonId"] = new SelectList(_context.Salons,"Id","Name");
             ViewData["ServiceId"] = new SelectList(_context.Services,"Id","Name");
 
             ViewBag.Today = DateTime.Now.ToString("yyyy-MM-dd");

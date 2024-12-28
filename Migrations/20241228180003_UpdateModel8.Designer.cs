@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BarberShopManagementSystem.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241226152645_UpdateModel8")]
+    [Migration("20241228180003_UpdateModel8")]
     partial class UpdateModel8
     {
         /// <inheritdoc />
@@ -246,7 +246,7 @@ namespace BarberShopManagementSystem.Migrations
                             Id = 5,
                             Duration = 90,
                             Name = "Saç Sakal Kesimi",
-                            Price = 300m
+                            Price = 400m
                         });
                 });
 
@@ -468,19 +468,19 @@ namespace BarberShopManagementSystem.Migrations
                     b.HasOne("BarberShopManagementSystem.Models.Employee", "Employee")
                         .WithMany("Appointments")
                         .HasForeignKey("EmployeeId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("BarberShopManagementSystem.Models.Salon", "Salon")
                         .WithMany("Appointments")
                         .HasForeignKey("SalonId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("BarberShopManagementSystem.Models.Service", "Service")
                         .WithMany()
                         .HasForeignKey("ServiceId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Employee");
@@ -512,7 +512,7 @@ namespace BarberShopManagementSystem.Migrations
                     b.HasOne("BarberShopManagementSystem.Models.Salon", "Salon")
                         .WithMany("Employees")
                         .HasForeignKey("SalonId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("ExpertService");
