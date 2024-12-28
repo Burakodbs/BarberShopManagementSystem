@@ -25,9 +25,11 @@ namespace BarberShopManagementSystem.Controllers {
             }
 
             var employee = await _context.Employees
+                .Include(e => e.Appointments)
+                    .ThenInclude(a => a.Service)
                 .Include(e => e.Salon)
                 .Include(e => e.ExpertService)
-                .FirstOrDefaultAsync(m => m.Id == id);
+                .FirstOrDefaultAsync(e => e.Id == id);
             if(employee == null) {
                 return NotFound();
             }
@@ -152,7 +154,6 @@ namespace BarberShopManagementSystem.Controllers {
                 }
             }
 
-            // Model geçerli değilse formu tekrar göster
             var services = _context.Services.ToList();
             ViewBag.Services = new SelectList(services,"Id","Name",employee.ExpertiseId);
             ViewBag.Salons = _context.Salons.Select(s => new SelectListItem {

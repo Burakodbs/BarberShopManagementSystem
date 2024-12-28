@@ -6,7 +6,6 @@
 
 <h2 class="text-center mb-4 text-primary">Create Appointment</h2>
 
-<!-- Original form remains same until the submit button -->
 <form asp-action="Create" method="post" id="appointmentForm">
     <div class="form-group mb-3">
         <label asp-for="SalonId" class="control-label">Salon</label>
@@ -41,7 +40,6 @@
     </div>
 </form>
 
-<!-- Confirmation Modal -->
 <div class="modal fade" id="confirmationModal" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -102,7 +100,7 @@
             let price = service.price;
 
             if (employee.expertServiceId == serviceId) {
-                price += 100; // Expert service fee
+                price += 100; 
             }
 
             document.getElementById('modalService').textContent = service.name;
@@ -156,7 +154,6 @@
             }
         }
 
-        // Form submit öncesi tarih ve saati birleştir
                 document.getElementById('appointmentForm').addEventListener('submit', function(e) {
             e.preventDefault();
 
@@ -168,9 +165,7 @@
                 return;
             }
 
-            // Create date in local timezone
             const dateTime = new Date(date + 'T' + time);
-            // Store the local date time string
             document.getElementById('RandevuZamani').value = dateTime.toISOString();
 
             this.submit();
@@ -181,13 +176,10 @@
             updateAvailableTimes();
         });
 
-        // Service değişikliğinde zamanları güncelle
         document.getElementById('ServiceId').addEventListener('change', updateAvailableTimes);
 
-        // Çalışan seçimi değiştiğinde zamanları güncelle
         document.getElementById('EmployeeId').addEventListener('change', updateAvailableTimes);
 
-        // Sayfa yüklendiğinde mevcut seçimlere göre zamanları güncelle
         document.addEventListener('DOMContentLoaded', updateAvailableTimes);
     </script>
 }

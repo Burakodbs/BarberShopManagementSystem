@@ -35,6 +35,6 @@ namespace BarberShopManagementSystem.Models {
         public List<string> WorkDays { get; set; } = new List<string>();
 
         public ICollection<Appointment> Appointments { get; set; } = new List<Appointment>();
-        
+
     }
 }

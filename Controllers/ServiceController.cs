@@ -22,7 +22,8 @@ namespace BarberShopManagementSystem.Controllers {
                 return NotFound();
             }
 
-            var service = await _context.Services
+            var service = await _context.Services.
+                Include(s => s.Salons)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if(service == null) {
                 return NotFound();

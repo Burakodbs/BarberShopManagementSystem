@@ -23,6 +23,7 @@ namespace BarberShopManagementSystem.Controllers {
 
             var salon = await _context.Salons
                 .Include(s => s.Services)
+                .Include(s => s.Employees)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if(salon == null) {
                 return NotFound();
@@ -43,12 +44,10 @@ namespace BarberShopManagementSystem.Controllers {
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(Salon salon,int[] selectedServices) {
             if(ModelState.IsValid) {
-                // Add selected services
                 salon.Services = _context.Services.Where(s => selectedServices.Contains(s.Id)).ToList();
                 _context.Add(salon);
                 await _context.SaveChangesAsync();
 
-                // Add the new Salon to the selected Services
                 var services = _context.Services.Where(s => selectedServices.Contains(s.Id)).ToList();
                 foreach(var service in services) {
                     service.Salons.Add(salon);

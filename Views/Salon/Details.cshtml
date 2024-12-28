@@ -59,7 +59,9 @@
                 <ul class="list-group">
                     @foreach (var employee in Model.Employees)
                     {
-                        <li class="list-group-item">@employee.Name @employee.Surname</li>
+                        <li class="list-group-item">
+                            @employee.Name @employee.Surname
+                        </li>
                     }
                 </ul>
             }

@@ -49,6 +49,15 @@ namespace BarberShopManagementSystem.Controllers {
             if(customer == null) {
                 return Unauthorized();
             }
+            var employee = await _context.Employees.Where(e => e.Id == appointment.EmployeeId).FirstOrDefaultAsync();
+
+            if(employee.IsOnVacation) {
+                ModelState.AddModelError("IsOnVacation","Çalışan tatilde");
+                ViewData["SalonId"] = new SelectList(_context.Salons,"Id","Address",appointment.SalonId);
+                ViewData["ServiceId"] = new SelectList(_context.Services,"Id","Name",appointment.ServiceId);
+                ViewData["EmployeeId"] = new SelectList(_context.Employees,"Id","Name",appointment.EmployeeId);
+                return View(appointment);
+            }
 
             if(appointment.RandevuZamani == null || appointment.RandevuZamani <= DateTime.Now) {
                 ModelState.AddModelError("RandevuZamani","You cannot select a past date or time.");
@@ -75,7 +84,6 @@ namespace BarberShopManagementSystem.Controllers {
                     return View(appointment);
                 }
 
-                // Set appointment details
                 appointment.CustomerName = customer.FirstName;
                 appointment.CustomerPhone = customer.PhoneNumber;
                 appointment.IsConfirmed = false;
@@ -162,7 +170,7 @@ namespace BarberShopManagementSystem.Controllers {
             return RedirectToAction(nameof(Index));
         }
 
-        [HttpPost, ActionName("Delete")]
+        [HttpPost, ActionName("Delete2")]
         [ValidateAntiForgeryToken]
         [Route("Appointment/DeleteConfirmed2/{id}")]
         public async Task<IActionResult> DeleteConfirmed2(int id) {
@@ -185,7 +193,7 @@ namespace BarberShopManagementSystem.Controllers {
             var employee = await _context.Employees.FirstOrDefaultAsync(e => e.Id == employeeId);
 
             if(employee.IsOnVacation) {
-                return BadRequest("Seçilen çalışan şu anda tatilde.");
+                return Json(new List<string>());
             }
 
             if(salon == null || employee == null) {

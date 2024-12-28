@@ -1,24 +1,30 @@
 ﻿@using BarberShopManagementSystem.ViewModels
 @model HairAnalysisViewModel
 
-<div class="container mt-4">
+<div class="container mt-4 p-4" style="background: linear-gradient(135deg, #f5f7fa, #c3cfe2); border-radius: 10px; box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);">
 
-    @* <div class="card mb-4">
-        <div class="card-header">
-            <h3>API Sonucu</h3>
-        </div>
-        <div class="card-body">
-            <pre>@Model.RawApiResult</pre>
-        </div>
-    </div> *@
+    <div class="text-center mb-4">
+        <h1 style="font-family: 'Roboto', sans-serif; font-weight: 700; color: #333;">Saç Analizi Sonuçları</h1>
+        <p style="font-family: 'Roboto', sans-serif; color: #555;">Kişisel saç analizinize göre önerilen modeller burada!</p>
+    </div>
 
-<div class="container mt-4">
-    <h3>Önerilen Saç Modelleri</h3>
-    <ul class="list-group mb-4">
-        @foreach (var style in Model.Recommendations.RecommendedStyles)
-        {
-            <li class="list-group-item">@style</li>
-        }
-    </ul>
+    <div class="recommendations mt-4">
+        <h3 style="font-family: 'Roboto', sans-serif; font-weight: 600; color: #444;">Önerilen Saç Modelleri</h3>
+        <ul class="list-group mb-4">
+            @foreach (var style in Model.Recommendations.RecommendedStyles)
+            {
+                <li class="list-group-item d-flex align-items-center" style="border: 1px solid #ddd; border-radius: 5px; margin-bottom: 10px; padding: 10px; background-color: #fff; box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1); transition: transform 0.2s;">
+                    <i class="fas fa-cut" style="margin-right: 10px; color: #007bff;"></i>
+                    <span style="font-family: 'Roboto', sans-serif; color: #555;">@style</span>
+                </li>
+            }
+        </ul>
+    </div>
+
+    <div class="text-center">
+        <a href="/" class="btn btn-primary" style="background-color: #007bff; border: none; padding: 10px 20px; font-size: 16px; border-radius: 5px; text-decoration: none;">Ana Sayfaya Dön</a>
+    </div>
 
 </div>
+
+<script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>

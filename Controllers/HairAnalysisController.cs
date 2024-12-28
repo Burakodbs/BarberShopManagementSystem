@@ -5,8 +5,8 @@ using System.Net.Http.Headers;
 
 namespace BarberShopManagementSystem.Controllers {
     public class HairAnalysisController : Controller {
-        private readonly string _huggingFaceApiKey = "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"; // Hugging Face'den ücretsiz API key alabilirsiniz
-        private readonly string _modelUrl = "https://api-inference.huggingface.co/models/Salesforce/blip-image-captioning-large"; // Örnek model
+        private readonly string _huggingFaceApiKey = "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";
+        private readonly string _modelUrl = "https://api-inference.huggingface.co/models/Salesforce/blip-image-captioning-large";
 
         [HttpGet]
         public IActionResult Upload() {
