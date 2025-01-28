@@ -187,6 +187,33 @@ namespace BarberShopManagementSystem.Controllers {
             return _context.Appointments.Any(e => e.Id == id);
         }
 
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> AllAppointments(string statusFilter = "All",string sortOrder = "Date") {
+            var appointments = _context.Appointments
+                .Include(a => a.Employee)
+                .Include(a => a.Salon)
+                .Include(a => a.Service)
+                .AsQueryable();
+
+            if(statusFilter == "Confirmed") {
+                appointments = appointments.Where(a => a.IsConfirmed);
+            }
+            else if(statusFilter == "Pending") {
+                appointments = appointments.Where(a => !a.IsConfirmed);
+            }
+
+            appointments = sortOrder switch {
+                "Date" => appointments.OrderBy(a => a.RandevuZamani),
+                "Customer" => appointments.OrderBy(a => a.CustomerName),
+                _ => appointments.OrderBy(a => a.RandevuZamani)
+            };
+
+            var result = await appointments.ToListAsync();
+            ViewBag.StatusFilter = statusFilter;
+            ViewBag.SortOrder = sortOrder;
+            return View(result);
+        }
+
         [HttpGet]
         public async Task<IActionResult> GetAvailableTimes(int salonId,int employeeId,DateTime date) {
             var salon = await _context.Salons.FirstOrDefaultAsync(s => s.Id == salonId);
@@ -225,35 +252,17 @@ namespace BarberShopManagementSystem.Controllers {
                 .Where(t => !bookedTimes.Any(b => b.TimeOfDay == TimeSpan.ParseExact(t,@"hh\:mm",CultureInfo.InvariantCulture)))
                 .ToList();
 
+            if(date.Date == DateTime.Today) {
+                var currentTime = DateTime.Now.TimeOfDay;
+                times = times
+                    .Where(t => TimeSpan.ParseExact(t,@"hh\:mm",CultureInfo.InvariantCulture) > currentTime)
+                    .ToList();
+            }
+
             return Json(times);
         }
 
-        [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> AllAppointments(string statusFilter = "All",string sortOrder = "Date") {
-            var appointments = _context.Appointments
-                .Include(a => a.Employee)
-                .Include(a => a.Salon)
-                .Include(a => a.Service)
-                .AsQueryable();
-
-            if(statusFilter == "Confirmed") {
-                appointments = appointments.Where(a => a.IsConfirmed);
-            }
-            else if(statusFilter == "Pending") {
-                appointments = appointments.Where(a => !a.IsConfirmed);
-            }
-
-            appointments = sortOrder switch {
-                "Date" => appointments.OrderBy(a => a.RandevuZamani),
-                "Customer" => appointments.OrderBy(a => a.CustomerName),
-                _ => appointments.OrderBy(a => a.RandevuZamani)
-            };
-
-            var result = await appointments.ToListAsync();
-            ViewBag.StatusFilter = statusFilter;
-            ViewBag.SortOrder = sortOrder;
-            return View(result);
-        }
+        
 
         [HttpPost]
         [Authorize(Roles = "Admin")]
